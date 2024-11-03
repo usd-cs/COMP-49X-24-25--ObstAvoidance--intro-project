@@ -29,14 +29,39 @@
 		405905662CD750CE00AA7935 /* miniProject-ObstacleAvoidanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "miniProject-ObstacleAvoidanceUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		914970E82CD836E900149717 /* Exceptions for "miniProject-ObstacleAvoidance" folder in "miniProject-ObstacleAvoidanceTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DataLayer/Comment.Swift,
+				DataLayer/Post.Swift,
+				DataLayer/User.Swift,
+			);
+			target = 4059055B2CD750CE00AA7935 /* miniProject-ObstacleAvoidanceTests */;
+		};
+		914970EC2CD8383E00149717 /* Exceptions for "miniProject-ObstacleAvoidanceTests" folder in "miniProject-ObstacleAvoidance" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DataTests.swift,
+			);
+			target = 4059054B2CD750CD00AA7935 /* miniProject-ObstacleAvoidance */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4059054E2CD750CD00AA7935 /* miniProject-ObstacleAvoidance */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				914970E82CD836E900149717 /* Exceptions for "miniProject-ObstacleAvoidance" folder in "miniProject-ObstacleAvoidanceTests" target */,
+			);
 			path = "miniProject-ObstacleAvoidance";
 			sourceTree = "<group>";
 		};
 		4059055F2CD750CE00AA7935 /* miniProject-ObstacleAvoidanceTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				914970EC2CD8383E00149717 /* Exceptions for "miniProject-ObstacleAvoidanceTests" folder in "miniProject-ObstacleAvoidance" target */,
+			);
 			path = "miniProject-ObstacleAvoidanceTests";
 			sourceTree = "<group>";
 		};

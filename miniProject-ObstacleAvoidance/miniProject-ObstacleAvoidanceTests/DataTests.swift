@@ -5,11 +5,12 @@
 //  Created by Darien Aranda on 11/3/24.
 //
 
-import Testing
+import XCTest
+@testable import miniProject_ObstacleAvoidance
 
-struct DataTests {
+final class DataTests: XCTestCase {
     
-    @Test func testUserInit() async throws {
+    func testUserInit() throws {
         //Testing the Initialization of creating a User instance
         //Creating instance of Commend using Testing
         let testUser = User(
@@ -20,39 +21,40 @@ struct DataTests {
             AdminStatus: true)
         
         //Setting up assertion statements
-        #expect(testUser.UserID == 1)
-        #expect(testUser.Name == "Darien Aranda")
-        #expect(testUser.Email == "Daranda@sandiego.edu")
-        #expect(testUser.Password == "123456789")
-        #expect(testUser.AdminStatus == true)
+        XCTAssertEqual(testUser.UserID, 1)
+        XCTAssertEqual(testUser.Name, "Darien Aranda")
+        XCTAssertEqual(testUser.Email, "Daranda@sandiego.edu")
+        XCTAssertEqual(testUser.Password, "123456789")
+        XCTAssertTrue(testUser.AdminStatus, "true")
     }
     
-    @Test func testPostInit() async throws {
+    func testPostInit() throws {
         //Testing the Initialization of creating a Post instance
         //Creating instance of Commend using Testing
         let testPost = Post(
             PostID: 1,
             UserID: 1,
-            PostContent: "This is a sample of a posts content")
+            PostContnent: "This is a sample of a posts content")
 
         //Setting up assertion statements
-        #expect(testPost.PostID == 1)
-        #expect(testPost.UserID == 1)
-        #expect(testPost.PostContent == "This is a sample of a posts content")
+        XCTAssertEqual(testPost.PostID, 1)
+        XCTAssertEqual(testPost.UserID, 1)
+        XCTAssertEqual(testPost.PostContent, "This is a sample of a posts content")
     }
     
-    @Test func testCommentInit() async throws {
+    func testCommentInit() throws {
         //testing the Initialization of creating a Comment Instance
         //Creating instance of Commend using Testing
         let testComment = Comment(
             CommentID: 1,
-            UserID: 1,
             PostID: 1,
-            CommentContent: "This is a sample of a comment content")
+            UserID: 3,
+            PostContent: "This is a sample of a comment content")
 
         //Setting up assertion statements
-        #expect(testComment.CommentID == 1)
-        #expect(testComment.UserID == 1)
-        #expect(testComment.CommendContent = "This is a sample of a comment content")
+        XCTAssertEqual(testComment.CommentID, 1)
+        XCTAssertEqual(testComment.PostID, 1)
+        XCTAssertEqual(testComment.UserID, 3)
+        XCTAssertEqual(testComment.CommentContent, "This is a sample of a comment content")
     }
 }
