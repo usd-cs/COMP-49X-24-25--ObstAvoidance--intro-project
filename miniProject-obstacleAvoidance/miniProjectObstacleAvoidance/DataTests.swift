@@ -3,6 +3,8 @@
 //  miniProject-ObstacleAvoidanceTests
 //
 //  Created by Darien Aranda on 11/3/24.
+//  * Started off Using XCTest as it was the older library and I hoped it wouldn't require updates
+//     * XCTest is having issues importing, so we will be swapping to use updated Swift Testing framework
 //
 
 import XCTest
