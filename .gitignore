@@ -1,5 +1,40 @@
-#Ignore maxOS system files
+# Ignore macOS system files
 .DS_Store
 
-#Ignore xcode build files
-/build
+# Ignore Xcode build files
+build/
+DerivedData/
+*.xcworkspace
+!default.xcworkspace/contents.xcworkspacedata
+
+# Ignore Swift Package Manager files
+.build/
+Package.resolved
+
+# Ignore other temporary files
+*.swp
+*.tmp
+*.log
+
+# Ignore user-specific settings
+*.xcuserdatad/
+*.xcuserdata/
+
+# Ignore compiled source files
+*.o
+*.so
+*.dylib
+
+# Ignore Pods directory if using CocoaPods
+Pods/
+
+# Ignore Carthage build directory if using Carthage
+Carthage/Build/
+
+# Ignore environment files
+.env
+
+# Ignore any secret keys or credentials (example)
+secrets.json
+
+# Ignore any custom files (add your own entries)
