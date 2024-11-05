@@ -4,7 +4,7 @@
 # Ignore Xcode build files
 build/
 DerivedData/
-*.xcworkspace
+#*.xcworkspace
 !default.xcworkspace/contents.xcworkspacedata
 
 # Ignore Swift Package Manager files
@@ -17,8 +17,8 @@ Package.resolved
 *.log
 
 # Ignore user-specific settings
-*.xcuserdatad/
-*.xcuserdata/
+#*.xcuserdatad/
+#*.xcuserdata/
 
 # Ignore compiled source files
 *.o
