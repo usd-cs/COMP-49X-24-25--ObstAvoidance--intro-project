@@ -8,10 +8,13 @@
 import SwiftUI
 
 @main
-struct testApp: App {
+struct forumApp: App {
+    // Declare login state upon opening
+    @State private var loginState: LoginState = .notLogginIn
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(loginState: $loginState)
         }
     }
 }
