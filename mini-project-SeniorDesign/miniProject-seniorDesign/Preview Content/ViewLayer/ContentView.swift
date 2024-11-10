@@ -4,7 +4,6 @@
 //
 //  Created by Darien Aranda on 11/7/24.
 //
-
 import SwiftUI
 
 enum LoginState {
@@ -13,19 +12,23 @@ enum LoginState {
     case adminLoggedIn
 }
 
-
 struct ContentView: View {
-    @Binding var loginState: LoginState
+    @State var loginState: LoginState
+
+
+    init(loginState: LoginState) {
+        self._loginState = State(initialValue: loginState)
+    }
     
     var body: some View {
         VStack {
             switch loginState {
             case .notLoggedIn:
-                loginView(loginState: $loginState)
+                LoginView(loginState: $loginState)
             case .userLoggedIn:
-                userView(loginState: $loginState)
+                UserView(loginState: $loginState)
             case .adminLoggedIn:
-                adminView(loginState: $loginState)
+                AdminView(loginState: $loginState)
             }
         }
         .padding()
@@ -33,5 +36,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(loginState: .notLoggedIn)
 }
