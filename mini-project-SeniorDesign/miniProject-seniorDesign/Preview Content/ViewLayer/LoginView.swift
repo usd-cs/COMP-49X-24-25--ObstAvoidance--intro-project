@@ -57,7 +57,7 @@ struct LoginView: View {
             }) {
                 Text("Login")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.blue)
                     .padding()
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
