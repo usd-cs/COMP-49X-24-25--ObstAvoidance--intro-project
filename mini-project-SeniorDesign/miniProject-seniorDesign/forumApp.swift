@@ -10,11 +10,13 @@ import SwiftUI
 @main
 struct forumApp: App {
     // Declare login state upon opening
-    @State private var loginState: LoginState = .notLoggedIn
+   // @State private var loginState: LoginState = .notLoggedIn
     
     var body: some Scene {
         WindowGroup {
-            ContentView(loginState: loginState)
+            ContentView()
+//            ContentView(loginState: loginState)
+    
         }
     }
 }

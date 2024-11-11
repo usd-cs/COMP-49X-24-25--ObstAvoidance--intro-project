@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @Binding var loginState: LoginState
+   // @Binding var loginState: LoginState
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isSecure: Bool = false
@@ -70,5 +70,8 @@ struct LoginView: View {
         //Actions for the button added here
         print("Username: \(username), Password: \(password)" )
     }
+}
+#Preview {
+    ContentView()
 }
 

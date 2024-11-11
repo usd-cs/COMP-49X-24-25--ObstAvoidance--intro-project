@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct AdminView: View {
-    @Binding var loginState: LoginState
-
-    var body: some View {
-        VStack {
-            Text("Admin Logged In")
-            Button("Log out") {
-                loginState = .notLoggedIn
-            }
-        }
-    }
-}
+//struct AdminView: View {
+//    @Binding var loginState: LoginState
+//
+//    var body: some View {
+//        VStack {
+//            Text("Admin Logged In")
+//            Button("Log out") {
+//                loginState = .notLoggedIn
+//            }
+//        }
+//    }
+//}
