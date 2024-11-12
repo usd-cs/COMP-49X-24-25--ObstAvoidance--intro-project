@@ -12,7 +12,7 @@ import SwiftUI
 
 //need to research if cascading is a default setup, or if we need a work around
 @Model
-final class User {
+final class User { //may need to make this Identifiable
     var name: String
     var email: String
     var admin: Bool
