@@ -8,10 +8,15 @@
 import SwiftUI
 import SwiftData
 @main
-struct testApp: App {
+struct forumApp: App {
+    // Declare login state upon opening
+   // @State private var loginState: LoginState = .notLoggedIn
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+//            ContentView(loginState: loginState)
+    
         }
         .modelContainer(for: [User.self,Post.self ,Comment.self])
     }
