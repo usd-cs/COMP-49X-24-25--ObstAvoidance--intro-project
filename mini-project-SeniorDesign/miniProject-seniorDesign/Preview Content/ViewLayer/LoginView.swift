@@ -24,7 +24,7 @@ struct LoginView: View {
                 //Username Text Field
                 TextField("Username", text: $username)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
             }
             .padding()
             
