@@ -8,24 +8,9 @@ import SwiftUI
 import SwiftData
 import Foundation
 
-//enum LoginState {
-//    case notLoggedIn
-//    case userLoggedIn
-//    case adminLoggedIn
-//}
+
 
 struct ContentView: View {
-    
-    //    @State var loginState: LoginState
-//    @State private var isLoggedIn = true
-//    @State private var isAdmin = true
-//    @State private var showNewPostForm = false
-//    @State private var showNewCommentForm = false
-//    @State private var newCommentString = ""
-//    @State private var selectedPost: Post?
-//    @State private var posts: [Post] = []
-//    @State private var showDeleteConfirmation = false
-//    @State private var postToDelete: Post? = nil
     @State private var isLoggedIn = true
     @State private var isAdmin = true
     @State private var showDeleteConfirmation = false
@@ -37,10 +22,6 @@ struct ContentView: View {
     @State private var isCreatingPost = false  // For triggering the new post  form
     @State private var currentUser: User? = nil
     @State private var refreshTrigger = false
-
-
-    // Function to set up mock data
-
 
     var body: some View {
         NavigationView {
@@ -112,7 +93,7 @@ struct ContentView: View {
                     }
                 }
             })
-   //         .onAppear { setupMockData() }
+
             .onAppear {
                             setupTestUser()  // Initialize the test user on appear
                             print("I have no clue")
