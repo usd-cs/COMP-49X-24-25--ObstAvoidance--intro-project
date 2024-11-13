@@ -89,5 +89,34 @@ class DataUtilsTesting {
         let result = try! DataUtils.userLogin(for: notLoggedUser, context: modelContext)
         #expect(result == true)
     }
+    
+    @Test("delete a comment") func deleteComment() {
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: false)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        
+        let comment = Comment(user: user, post: post, contents: "Test comment", createdAt: Date())
+        context.insert(comment)
+        commentsInContext.append(comment)
+        
+        #expect(commentsInContext.contains { $0 === comment } == true)
+        
+        // Test delete
+        do {
+            try DataUtils.deleteComment(for: context, comment: comment)
+            commentsInContext.removeAll { $0 === comment }
+            let isCommentDeleted = !commentsInContext.contains { $0 === comment }
+            #expect(isCommentDeleted == true)
+        } catch {
+            #expect(Bool(false), "Error deleting comment: \(error)")
+        }
+    }
+
 }
 

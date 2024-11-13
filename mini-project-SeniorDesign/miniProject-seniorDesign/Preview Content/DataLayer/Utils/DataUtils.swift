@@ -124,5 +124,21 @@ struct DataUtils {
         
         
     }
+    
+    static func addComment(for context: ModelContext, comment: String)throws{
+        
+    }
+    
+    static func deleteComment(for context: ModelContext, comment: Comment)throws {
+        context.delete(comment)
+        
+        do{
+            try context.save()
+        }
+        catch{
+            print("Error: Comment could not be delted from database")
+            throw DataError.couldNotSave
+        }
+    }
 }
 

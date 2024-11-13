@@ -15,6 +15,8 @@ struct commentView: View{
     let isAdmin: Bool
     let isLoggedIn: Bool
     
+    @Environment(\.modelContext) var context
+    
     var body : some View{
         VStack{
             List(comments, id: \.createdAt) { comment in
@@ -27,7 +29,7 @@ struct commentView: View{
                             Text(comment.contents)
                                 .font(.body)
                         }
-                        if isAdmin {
+                        if isAdmin && isLoggedIn {
                             Button(action: {
                                 commentToDelete = comment
                                 showDeleteConfirmation = true
@@ -47,7 +49,7 @@ struct commentView: View{
             }
             .navigationTitle("Comments")
             
-            if isLoggedIn || isAdmin {
+            if isLoggedIn && isAdmin {
                 NavigationLink(destination: newCommentView()) {
                     Text("Add a comment")
                         .font(.caption)
@@ -69,7 +71,12 @@ struct commentView: View{
         }
     }
     func deleteComment(_ comment: Comment) {
-        comments.removeAll { $0.createdAt == comment.createdAt }
-        print("Comment deleted: \(comment.contents)")
+        do{
+            try DataUtils.deleteComment(for: context, comment: comment)
+            comments.removeAll { $0.createdAt == comment.createdAt }
+            print("Comment deleted: \(comment.contents)")
+        } catch{
+            print("Failed to delete comment: \(error)")
+        }
     }
 }
