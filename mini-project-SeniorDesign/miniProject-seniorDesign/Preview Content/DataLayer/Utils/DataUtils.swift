@@ -79,6 +79,7 @@ struct DataUtils {
             
             do{
                 try context.save()
+                print("here")
                 return new_post //if post is succesfully created we return the post to indicate this
             }
             catch{

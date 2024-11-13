@@ -23,3 +23,6 @@ struct forumApp: App {
         .modelContainer(for: [User.self,Post.self ,Comment.self])
     }
 }
+#Preview {
+    ContentView()
+}

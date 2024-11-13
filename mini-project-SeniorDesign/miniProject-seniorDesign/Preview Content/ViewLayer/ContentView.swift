@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import Foundation
 
 //enum LoginState {
 //    case notLoggedIn
@@ -16,41 +17,29 @@ import SwiftData
 struct ContentView: View {
     
     //    @State var loginState: LoginState
+//    @State private var isLoggedIn = true
+//    @State private var isAdmin = true
+//    @State private var showNewPostForm = false
+//    @State private var showNewCommentForm = false
+//    @State private var newCommentString = ""
+//    @State private var selectedPost: Post?
+//    @State private var posts: [Post] = []
+//    @State private var showDeleteConfirmation = false
+//    @State private var postToDelete: Post? = nil
     @State private var isLoggedIn = true
     @State private var isAdmin = true
-    @State private var showNewPostForm = false
-    @State private var showNewCommentForm = false
-    @State private var newCommentString = ""
-    @State private var selectedPost: Post?
-    @State private var posts: [Post] = []
     @State private var showDeleteConfirmation = false
     @State private var postToDelete: Post? = nil
+    @Environment(\.modelContext) private var context: ModelContext
+    @Query var posts: [Post]
+    @Query var loggedUsers: [User]
+    @State private var newPostContent = ""
+    @State private var isCreatingPost = false  // For triggering the new post  form
+    @State private var currentUser: User? = nil
+    @State private var refreshTrigger = false
+
 
     // Function to set up mock data
-    func setupMockData() {
-        // Creating mock posts with contents and dates
-        let user1 = User(name: "John Doe", email: "john@example.com", admin: true)
-        let user2 = User(name: "Jane Smith", email: "jane@example.com", admin: false)
-        let user3 = User(name: "Alice Brown", email: "alice@example.com", admin: false)
-        
-        // Create mock posts associated with these users
-        let post1 = Post(user: user1, contents: "This is the first post", createdAt: Date())
-        let post2 = Post(user: user2, contents: "This is the second post", createdAt: Date().addingTimeInterval(-3600))
-        let post3 = Post(user: user3, contents: "This is the third post", createdAt: Date().addingTimeInterval(-7200))
-        
-        // Create mock comments associated with the posts and users
-        let comment1 = Comment(user: user2, post: post1, contents: "This is a comment on the first post")
-        let comment2 = Comment(user: user3, post: post1, contents: "Another comment on the first post")
-        let comment3 = Comment(user: user1, post: post2, contents: "Comment on the second post")
-        
-        // Add comments to the respective posts' comments relationships
-        post1.comments.append(comment1)
-        post1.comments.append(comment2)
-        post2.comments.append(comment3)
-        
-        // Assign posts to the posts array
-        self.posts = [post1, post2, post3]
-    }
 
 
     var body: some View {
@@ -97,14 +86,15 @@ struct ContentView: View {
                     }
                     .padding()
                 }
-                
-                if isLoggedIn {
-                    NavigationLink(destination: NewPostView()) {
+                .id(refreshTrigger)
+                if isLoggedIn, let user = currentUser {
+                    NavigationLink(destination: NewPostView(context: context, loggedUsers: loggedUsers, currentUser: user, refreshTrigger: $refreshTrigger)) {
                         Text("Create New Post")
                     }
                     .bold()
                     .padding(.top)
                 }
+
             }
             .navigationTitle("Posts")
             .navigationBarItems(trailing: HStack {
@@ -122,7 +112,11 @@ struct ContentView: View {
                     }
                 }
             })
-            .onAppear { setupMockData() }
+   //         .onAppear { setupMockData() }
+            .onAppear {
+                            setupTestUser()  // Initialize the test user on appear
+                            print("I have no clue")
+                        }
             .alert(isPresented: $showDeleteConfirmation) {
                 Alert(
                     title: Text("Are you sure?"),
@@ -135,10 +129,22 @@ struct ContentView: View {
                     secondaryButton: .cancel()
                 )
             }
+            .onAppear{
+                print("contentViw appear, posts reloaded")
+            }
 
         }
     }
-    
+    private func setupTestUser() {
+                let testUser = User(name: "Test User", email: "test@example.com", admin: false)
+                context.insert(testUser)
+                do {
+                    try context.save()
+                    currentUser = testUser
+                } catch {
+                    print("Failed to save test user: \(error)")
+                }
+            }
     func logout() {
         isLoggedIn = false
     }
