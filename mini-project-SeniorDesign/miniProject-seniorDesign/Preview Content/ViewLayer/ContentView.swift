@@ -17,7 +17,7 @@ struct ContentView: View {
     
     //    @State var loginState: LoginState
     @State private var isLoggedIn = true
-    @State private var isAdmin = true
+    @State private var isAdmin = false
     @State private var showNewPostForm = false
     @State private var showNewCommentForm = false
     @State private var newCommentString = ""
@@ -79,20 +79,13 @@ struct ContentView: View {
                             }
                         }
                         
-                        NavigationLink(destination: commentView(comments: post.comments)) {
+                        NavigationLink(destination: commentView(comments: post.comments, isAdmin: isAdmin, isLoggedIn: isLoggedIn)) {
                                 Text("View all comments")
                                     .font(.caption)
                                     .foregroundColor(.blue)
                                     .padding(.top, 5)
                         }
                         
-                        if isLoggedIn {
-                            NavigationLink(destination: newCommentView()) {
-                                Text("Add a comment")
-                                    .font(.caption)
-                                    .foregroundColor(.blue)
-                            }
-                        }
                     }
                     .padding()
                 }
