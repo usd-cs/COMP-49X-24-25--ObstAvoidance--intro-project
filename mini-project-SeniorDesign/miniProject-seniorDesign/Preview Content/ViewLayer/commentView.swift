@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct commentView: View{
-    let comments: [Comment]
+    @State var commentToDelete: Comment?
+    @State var showDeleteConfirmation: Bool = false
+    
+    @State var comments: [Comment]
     let isAdmin: Bool
     let isLoggedIn: Bool
     
@@ -24,14 +27,16 @@ struct commentView: View{
                             Text(comment.contents)
                                 .font(.body)
                         }
-                        if isAdmin{
-                            NavigationLink(destination: deletePostView()) {
+                        if isAdmin {
+                            Button(action: {
+                                commentToDelete = comment
+                                showDeleteConfirmation = true
+                            }) {
                                 Image(systemName: "trash")
                                     .foregroundColor(.red)
                             }
-                            .buttonStyle(BorderlessButtonStyle()) // Remove button background padding
-                            .frame(width: 14, height: 14)
-                            .padding(.leading, 30)
+                            .buttonStyle(BorderlessButtonStyle())
+                            .frame(width: 24, height: 20)
                         }
                     }
                     
@@ -41,6 +46,7 @@ struct commentView: View{
                 
             }
             .navigationTitle("Comments")
+            
             if isLoggedIn || isAdmin {
                 NavigationLink(destination: newCommentView()) {
                     Text("Add a comment")
@@ -49,7 +55,21 @@ struct commentView: View{
                 }
             }
         }
-  
+        .alert(isPresented: $showDeleteConfirmation) {
+            Alert(
+                title: Text("Are you sure?"),
+                message: Text("Do you really want to delete this comment? This action cannot be undone."),
+                primaryButton: .destructive(Text("Delete")) {
+                    if let comment = commentToDelete {
+                        deleteComment(comment)
+                    }
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
-    
+    func deleteComment(_ comment: Comment) {
+        comments.removeAll { $0.createdAt == comment.createdAt }
+        print("Comment deleted: \(comment.contents)")
+    }
 }

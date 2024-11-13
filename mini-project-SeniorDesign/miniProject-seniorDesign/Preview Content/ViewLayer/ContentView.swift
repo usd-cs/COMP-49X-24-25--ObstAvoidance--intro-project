@@ -17,12 +17,15 @@ struct ContentView: View {
     
     //    @State var loginState: LoginState
     @State private var isLoggedIn = true
-    @State private var isAdmin = false
+    @State private var isAdmin = true
     @State private var showNewPostForm = false
     @State private var showNewCommentForm = false
     @State private var newCommentString = ""
     @State private var selectedPost: Post?
     @State private var posts: [Post] = []
+    @State private var showDeleteConfirmation = false
+    @State private var postToDelete: Post? = nil
+
     // Function to set up mock data
     func setupMockData() {
         // Creating mock posts with contents and dates
@@ -70,13 +73,18 @@ struct ContentView: View {
                             Spacer()
                             
                             if isAdmin {
-                                NavigationLink(destination: deletePostView()) {
+                                Button(action: {
+                                    postToDelete = post // Store the post to delete
+                                    showDeleteConfirmation = true 
+                                }) {
                                     Image(systemName: "trash")
                                         .foregroundColor(.red)
                                 }
-                                .buttonStyle(BorderlessButtonStyle()) // Remove button background padding
-                                .frame(width: 24, height: 24) // Adjust to fit icon size exactly
+                                .buttonStyle(BorderlessButtonStyle())
+                                .frame(width: 24, height: 20)
                             }
+
+
                         }
                         
                         NavigationLink(destination: commentView(comments: post.comments, isAdmin: isAdmin, isLoggedIn: isLoggedIn)) {
@@ -115,6 +123,19 @@ struct ContentView: View {
                 }
             })
             .onAppear { setupMockData() }
+            .alert(isPresented: $showDeleteConfirmation) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("Do you really want to delete this post? This action cannot be undone."),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let post = postToDelete {
+                            deletePost(post)
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+
         }
     }
     
@@ -123,6 +144,11 @@ struct ContentView: View {
     }
 }
     
+func deletePost(_ post: Post) {
+    print("Post Delete Clicked")
+}
+
+
     
     #Preview {
         ContentView()
