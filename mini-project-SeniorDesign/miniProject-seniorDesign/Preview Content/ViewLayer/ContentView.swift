@@ -134,7 +134,7 @@ struct ContentView: View {
                 )
             }
             .onAppear {
-                            setupTestUser()  // Initialize the test user on appear
+                      //      setupTestUser()  // Initialize the test user on appear
                             print("User Set up")
 //                DataUtils.printAllUsers(context: context)
 //                DataUtils.printAllPosts(context: context)
@@ -154,10 +154,12 @@ struct ContentView: View {
     private func setupTestUser() {
         let testUser = User(name: "Test User", email: "test@example.com", admin: false)
         context.insert(testUser)
-        
+        let customDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        let customDate2 = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
+
         // Create a couple of posts for the test user
-        let post1 = Post(user: testUser, contents: "This is the first post by Test User.")
-        let post2 = Post(user: testUser, contents: "This is another post by Test User.")
+        let post1 = Post(user: testUser, contents: "This is the first post by Test User.", createdAt: customDate)
+        let post2 = Post(user: testUser, contents: "This is another post by Test User.", createdAt: customDate2)
         
         // Insert posts into the context
         context.insert(post1)
