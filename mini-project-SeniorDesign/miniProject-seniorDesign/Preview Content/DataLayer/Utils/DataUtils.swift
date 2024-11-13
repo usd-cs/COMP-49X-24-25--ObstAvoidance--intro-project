@@ -62,9 +62,11 @@ struct DataUtils {
         
         //we probably don't want to add any empty posts
         guard !post_content.isEmpty else { throw DataError.invalidContent }
+        print(commenting_user.name, logged_users)
         
         
-        if(checkIfLoggedIn(for: commenting_user, in: logged_users)){
+//        if(checkIfLoggedIn(for: commenting_user, in: logged_users)){
+            print("Inside this hoe")
            
             let new_post = Post(user: commenting_user , contents: post_content)
             
@@ -89,11 +91,11 @@ struct DataUtils {
             
             
             
-        }
-        else{
-            // if user not found we return null so we prompt to login later in the program
-            return nil
-        }
+//        }
+//        else{
+//            // if user not found we return null so we prompt to login later in the program
+//            return nil
+//        }
         
         
     }
@@ -125,5 +127,42 @@ struct DataUtils {
         
         
     }
-}
+    static func printAllUsers(context: ModelContext) {
+            let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
+            do {
+                let users: [User] = try context.fetch(fetchRequest) // Fetch all users
+                print("Users in Database:")
+                for user in users {
+                    print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin)")
+                }
+            } catch {
+                print("Failed to fetch users: \(error.localizedDescription)")
+            }
+        }
 
+        static func printAllPosts(context: ModelContext) {
+            let fetchRequest = FetchDescriptor<Post>() // Create a fetch descriptor for Post
+            do {
+                let posts: [Post] = try context.fetch(fetchRequest) // Fetch all posts
+                print("Posts in Database:")
+                for post in posts {
+                    print("Contents: \(post.contents), Created At: \(post.createdAt), Posted By: \(post.user.name)")
+                }
+            } catch {
+                print("Failed to fetch posts: \(error.localizedDescription)")
+            }
+        }
+
+        static func printAllComments(context: ModelContext) {
+            let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
+            do {
+                let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
+                print("Comments in Database:")
+                for comment in comments {
+                    print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
+                }
+            } catch {
+                print("Failed to fetch comments: \(error.localizedDescription)")
+            }
+        }
+}

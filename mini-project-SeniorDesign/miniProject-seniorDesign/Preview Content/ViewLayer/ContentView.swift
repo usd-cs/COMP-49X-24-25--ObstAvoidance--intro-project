@@ -115,7 +115,7 @@ struct ContentView: View {
    //         .onAppear { setupMockData() }
             .onAppear {
                             setupTestUser()  // Initialize the test user on appear
-                            print("I have no clue")
+                            print("User Set up")
                         }
             .alert(isPresented: $showDeleteConfirmation) {
                 Alert(
@@ -129,15 +129,23 @@ struct ContentView: View {
                     secondaryButton: .cancel()
                 )
             }
+//            onAppear {
+//                            // Print all data when the view appears
+//                            DataUtils.printAllUsers(context: context)
+//                            DataUtils.printAllPosts(context: context)
+//                            DataUtils.printAllComments(context: context)
+//                        }
             .onAppear{
                 print("contentViw appear, posts reloaded")
             }
 
         }
+        
     }
     private func setupTestUser() {
                 let testUser = User(name: "Test User", email: "test@example.com", admin: false)
                 context.insert(testUser)
+                
                 do {
                     try context.save()
                     currentUser = testUser

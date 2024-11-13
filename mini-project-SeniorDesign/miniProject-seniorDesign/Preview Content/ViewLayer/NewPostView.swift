@@ -45,8 +45,8 @@ struct NewPostView: View {
                 errorMessage = nil
                 print("New post created: \(newPost.contents)")
                 postContent = "" // Clear the post content
-                try context.save()
-                refreshTrigger.toggle()
+             //   try context.save()
+            //    refreshTrigger.toggle()
                 dismiss()
             } else {
                 errorMessage = "Failed to create post. User might not be logged in."
