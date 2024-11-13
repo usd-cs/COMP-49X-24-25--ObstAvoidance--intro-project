@@ -62,6 +62,7 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
             }
+            
         }
         .padding()
     }
@@ -70,6 +71,8 @@ struct LoginView: View {
         //Actions for the button added here
         print("Username: \(username), Password: \(password)" )
     }
+    
+
 }
 #Preview {
     ContentView()

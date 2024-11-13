@@ -23,6 +23,9 @@ struct ContentView: View {
     @State private var newCommentString = ""
     @State private var selectedPost: Post?
     @State private var posts: [Post] = []
+    @State private var showDeleteConfirmation = false
+    @State private var postToDelete: Post? = nil
+
     // Function to set up mock data
     func setupMockData() {
         // Creating mock posts with contents and dates
@@ -48,91 +51,61 @@ struct ContentView: View {
         // Assign posts to the posts array
         self.posts = [post1, post2, post3]
     }
-    
+
+
     var body: some View {
-        NavigationView{
+        NavigationView {
             VStack {
-                //gets the list of posts as well as puts it in the order
                 List(posts, id: \.createdAt) { post in
-                    VStack(alignment: .leading){
-                        Text(post.contents)
-                            .font(.headline)
-                        Text("Posted by: \(post.user.name)")
-                            .font(.subheadline)
-                        Text("Posted at: \(post.createdAt.formatted())")
-                            .font(.subheadline)
-                        
-                        ForEach(post.comments, id: \.createdAt){ comment in
-                            Text(comment.contents)
-                                .font(.body)
-                                .padding(.leading)
-                        }
-                        
-                        if isLoggedIn{
-                            //when the user is logged in they will see the comment button and can make a comment
-                            NavigationLink(destination: newCommentView())
-                            {
-                                Text("Add a comment").font(.caption).foregroundColor(.blue)
+                    VStack(alignment: .leading) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(post.contents)
+                                    .font(.headline)
+                                
+                                Text("Posted by: \(post.user.name)")
+                                    .font(.subheadline)
+                                
+                                Text("Posted at: \(post.createdAt.formatted())")
+                                    .font(.subheadline)
                             }
-// THIS IS ALL OLD CODE, I DID not want to delete it bc it helps see //thought process
-//                                Button(action: {
-//                                    selectedPost = post
-//                                    showNewCommentForm.toggle()
-//                                }){
-//                                    Text("Add a comment")
-//                                        .font(.caption)
-//                                        .foregroundColor(.blue)
-//                                }
-//                                .sheet(isPresented: $showNewCommentForm)
-//                                {
-//                                    VStack
-//                                    {
-//                                        Text("Add a comment").font(.title2)
-//                                        TextField("Enter comment", text: $newCommentString)
-//                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-//                                            .padding()
-//                                        Button("Submit")
-//                                        {
-//
-//                                        }
-//
-//                                    }
-//                                }
+                            
+                            Spacer()
+                            
+                            if isAdmin {
+                                Button(action: {
+                                    postToDelete = post // Store the post to delete
+                                    showDeleteConfirmation = true 
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                                .frame(width: 24, height: 20)
+                            }
+
+
                         }
+                        
+                        NavigationLink(destination: commentView(comments: post.comments, isAdmin: isAdmin, isLoggedIn: isLoggedIn)) {
+                                Text("View all comments")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                                    .padding(.top, 5)
+                        }
+                        
                     }
+                    .padding()
                 }
-                if isLoggedIn{
-                    NavigationLink(destination: NewPostView())
-                    {
+                
+                if isLoggedIn {
+                    NavigationLink(destination: NewPostView()) {
                         Text("Create New Post")
                     }
                     .bold()
                     .padding(.top)
-                    //OLD LOG OUT OR LOG IN CODE. Feel free to delete but is simpler, so can help //see thought process
-//                    Button(action: {
-//                        logout()
-//                    }) {
-//                        Text("Logout")
-//                            .font(.headline)
-//                            .foregroundColor(.blue)
-//                            .padding()
-//                            .frame(maxWidth: .infinity)
-//                            .cornerRadius(10)
-//                    }
-//                    
-//                    
                 }
-//                if !isLoggedIn{
-//                    NavigationLink(destination: LoginView())
-//                    {
-//                        Text("Login")
-//                    }
-//                    .bold()
-//                    .padding(.top)
-//                }
-                
             }
-            //This is whatt allows us to have to login and logout in the top corner
             .navigationTitle("Posts")
             .navigationBarItems(trailing: HStack {
                 if !isLoggedIn {
@@ -142,48 +115,43 @@ struct ContentView: View {
                             .foregroundColor(.blue)
                     }
                 } else {
-                    Button(action: {
-                        logout()
-                    }) {
+                    Button(action: { logout() }) {
                         Text("Logout")
                             .font(.headline)
                             .foregroundColor(.blue)
                     }
                 }
             })
-        }
-        .onAppear{
-            setupMockData()
+            .onAppear { setupMockData() }
+            .alert(isPresented: $showDeleteConfirmation) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("Do you really want to delete this post? This action cannot be undone."),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let post = postToDelete {
+                            deletePost(post)
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+
         }
     }
-    func logout(){
+    
+    func logout() {
         isLoggedIn = false
     }
 }
-
-
-#Preview {
-    ContentView()
+    
+func deletePost(_ post: Post) {
+    print("Post Delete Clicked")
 }
 
-//    init(loginState: LoginState) {
-//        self._loginState = State(initialValue: loginState)
-//    }
 
-//#Preview {
-//    ContentView(loginState: .notLoggedIn)
-//}
+    
+    #Preview {
+        ContentView()
+    }
+    
 
-//            switch loginState {
-//            case .notLoggedIn:
-//                //LoginView(loginState: $loginState)
-//                ForumView(loginState: $loginState)
-//            case .userLoggedIn:
-//                UserView(loginState: $loginState)
-//            case .adminLoggedIn:
-//                AdminView(loginState: $loginState)
-//            }
-//        }
-//        .padding()
-//    }
-//}
