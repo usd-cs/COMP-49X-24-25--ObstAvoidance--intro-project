@@ -12,6 +12,9 @@ import Foundation
 //    case notLoggedIn
 //    case userLoggedIn
 //    case adminLoggedIn
+//var container: ModelContainer
+//var modelContext: ModelContext
+//modelContext = container.mainContext
 //}
 
 struct ContentView: View {
@@ -30,19 +33,22 @@ struct ContentView: View {
     @State private var isAdmin = true
     @State private var showDeleteConfirmation = false
     @State private var postToDelete: Post? = nil
-    @Environment(\.modelContext) private var context: ModelContext
+    @Environment(\.modelContext) var context
     @Query var posts: [Post]
     @Query var loggedUsers: [User]
     @State private var newPostContent = ""
     @State private var isCreatingPost = false  // For triggering the new post  form
     @State private var currentUser: User? = nil
     @State private var refreshTrigger = false
+  
+
 
 
     // Function to set up mock data
 
 
     var body: some View {
+
         NavigationView {
             VStack {
                 List(posts, id: \.createdAt) { post in
@@ -88,7 +94,8 @@ struct ContentView: View {
                 }
                 .id(refreshTrigger)
                 if isLoggedIn, let user = currentUser {
-                    NavigationLink(destination: NewPostView(context: context, loggedUsers: loggedUsers, currentUser: user, refreshTrigger: $refreshTrigger)) {
+                 //   print("Current user \(currentUser ?? default none)")
+                    NavigationLink(destination: NewPostView(loggedUsers: loggedUsers, currentUser: user, context: context)) {
                         Text("Create New Post")
                     }
                     .bold()
@@ -113,10 +120,7 @@ struct ContentView: View {
                 }
             })
    //         .onAppear { setupMockData() }
-            .onAppear {
-                            setupTestUser()  // Initialize the test user on appear
-                            print("User Set up")
-                        }
+
             .alert(isPresented: $showDeleteConfirmation) {
                 Alert(
                     title: Text("Are you sure?"),
@@ -129,30 +133,54 @@ struct ContentView: View {
                     secondaryButton: .cancel()
                 )
             }
-//            onAppear {
-//                            // Print all data when the view appears
-//                            DataUtils.printAllUsers(context: context)
-//                            DataUtils.printAllPosts(context: context)
-//                            DataUtils.printAllComments(context: context)
-//                        }
-            .onAppear{
-                print("contentViw appear, posts reloaded")
-            }
+            .onAppear {
+                            setupTestUser()  // Initialize the test user on appear
+                            print("User Set up")
+//                DataUtils.printAllUsers(context: context)
+//                DataUtils.printAllPosts(context: context)
+//                DataUtils.printAllComments(context: context)
+                        }
+            .onAppear {
+                            // Print all data when the view appears
+
+                        }
+//            .onAppear{
+//                print("contentViw appear, posts reloaded")
+//            }
 
         }
         
     }
     private func setupTestUser() {
-                let testUser = User(name: "Test User", email: "test@example.com", admin: false)
-                context.insert(testUser)
-                
-                do {
-                    try context.save()
-                    currentUser = testUser
-                } catch {
-                    print("Failed to save test user: \(error)")
-                }
-            }
+        let testUser = User(name: "Test User", email: "test@example.com", admin: false)
+        context.insert(testUser)
+        
+        // Create a couple of posts for the test user
+        let post1 = Post(user: testUser, contents: "This is the first post by Test User.")
+        let post2 = Post(user: testUser, contents: "This is another post by Test User.")
+        
+        // Insert posts into the context
+        context.insert(post1)
+        context.insert(post2)
+
+        // Assign posts to the test user
+        testUser.posts.append(post1)
+        testUser.posts.append(post2)
+        
+        // Save the context
+        do {
+            try context.save()
+            print("Test user and posts saved successfully: \(testUser.name)")
+            
+            // Optional: Print all users and their posts for verification
+            printAllUsers(context: context)
+            printAllPosts(context: context)
+            
+            currentUser = testUser
+        } catch {
+            print("Failed to save test user or posts: \(error)")
+        }
+    }
     func logout() {
         isLoggedIn = false
     }

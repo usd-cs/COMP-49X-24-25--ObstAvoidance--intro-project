@@ -15,12 +15,10 @@ enum DataError: Error {
     case couldNotLoginUser
 }
 
-
-struct DataUtils {
     /**
     im really not sure on whether or not @Envirorment and @Query should go here or if i'd be better off passing them as parameters to the functions
      */
-    //@Environment(\.modelContext) static var context
+   // @Environment(\.modelContext) static var context: ModelContext
     //@Query() static var logged_users: [User]
     
     
@@ -29,7 +27,7 @@ struct DataUtils {
     /// - Parameter logged_users: the array containing all of the users currently in the database
     ///
     ///- Returns: true if the user is found in the array --> (in DB), false otherwhise
-    static func checkIfLoggedIn(for user :User, in logged_users: [User])->Bool{
+    func checkIfLoggedIn(for user :User, in logged_users: [User])->Bool{
         //im still not to sure on how to do this, but
         /**
          if user is logged in --> return true
@@ -58,7 +56,7 @@ struct DataUtils {
     /// - Throws: the function will throw an error if post_content is empty or if the Post failed to be saved to DB from context
     ///
     /// - Returns: Post the post added to the database if operation was succesfull or nil otherwise
-    static func addPost(for commenting_user: User, post_content: String, context: ModelContext, logged_users: [User]) throws -> Post?{
+func addPost(for commenting_user: User, post_content: String, logged_users: [User], context: ModelContext) throws -> Post?{
         
         //we probably don't want to add any empty posts
         guard !post_content.isEmpty else { throw DataError.invalidContent }
@@ -66,7 +64,6 @@ struct DataUtils {
         
         
 //        if(checkIfLoggedIn(for: commenting_user, in: logged_users)){
-            print("Inside this hoe")
            
             let new_post = Post(user: commenting_user , contents: post_content)
             
@@ -81,13 +78,18 @@ struct DataUtils {
             
             do{
                 try context.save()
-                print("here")
+                print("Printing inside of data utils: ")
+                printAllUsers(context: context)
+                printAllPosts(context: context)
+                printAllComments(context: context)
                 return new_post //if post is succesfully created we return the post to indicate this
             }
             catch{
                 print("error post could not be saved to database")
                 throw DataError.couldNotSave
             }
+        
+
             
             
             
@@ -108,7 +110,7 @@ struct DataUtils {
     ///- Throws function throws an error if saving new user in database fails or if the user in question has no emial (unique identifier)
     ///
     ///- Returns void
-    static func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
+    func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
         
         //fist we check if the user object being passed has an email
         guard !user_to_login.email.isEmpty else{throw DataError.invalidContent}
@@ -127,8 +129,9 @@ struct DataUtils {
         
         
     }
-    static func printAllUsers(context: ModelContext) {
+    func printAllUsers(context: ModelContext) {
             let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
+        //print(fetchRequest)
             do {
                 let users: [User] = try context.fetch(fetchRequest) // Fetch all users
                 print("Users in Database:")
@@ -140,7 +143,7 @@ struct DataUtils {
             }
         }
 
-        static func printAllPosts(context: ModelContext) {
+        func printAllPosts(context: ModelContext) {
             let fetchRequest = FetchDescriptor<Post>() // Create a fetch descriptor for Post
             do {
                 let posts: [Post] = try context.fetch(fetchRequest) // Fetch all posts
@@ -153,7 +156,7 @@ struct DataUtils {
             }
         }
 
-        static func printAllComments(context: ModelContext) {
+        func printAllComments(context: ModelContext) {
             let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
             do {
                 let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
@@ -165,4 +168,3 @@ struct DataUtils {
                 print("Failed to fetch comments: \(error.localizedDescription)")
             }
         }
-}

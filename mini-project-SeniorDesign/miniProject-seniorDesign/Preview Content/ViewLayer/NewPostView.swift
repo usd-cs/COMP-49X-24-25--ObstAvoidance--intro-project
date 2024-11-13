@@ -12,11 +12,12 @@ import Foundation
 struct NewPostView: View {
     @State private var postContent: String = ""
     @State private var errorMessage: String? = nil
-    var context: ModelContext
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.modelContext) var context
+//    @Environment(\.dismiss) var dismiss
     var loggedUsers: [User]
     var currentUser: User
-    @Binding var refreshTrigger: Bool
+    var context: ModelContext
+    //@Binding var refreshTrigger: Bool
     var body: some View {
         VStack
         {
@@ -40,14 +41,14 @@ struct NewPostView: View {
     func submitPost(){
         //Actions for the button added here
         do {
-            if let newPost = try DataUtils.addPost(for: currentUser, post_content: postContent, context: context, logged_users: loggedUsers) {
+            if let newPost = try addPost(for: currentUser, post_content: postContent, logged_users: loggedUsers, context: context) {
                 // If post is successfully created, show success message and clear content
                 errorMessage = nil
                 print("New post created: \(newPost.contents)")
                 postContent = "" // Clear the post content
-             //   try context.save()
-            //    refreshTrigger.toggle()
-                dismiss()
+                try context.save()
+     //           refreshTrigger.toggle()
+ //               dismiss()
             } else {
                 errorMessage = "Failed to create post. User might not be logged in."
             }
