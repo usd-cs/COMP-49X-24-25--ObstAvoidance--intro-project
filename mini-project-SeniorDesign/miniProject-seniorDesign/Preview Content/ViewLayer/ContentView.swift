@@ -48,142 +48,165 @@ struct ContentView: View {
         // Assign posts to the posts array
         self.posts = [post1, post2, post3]
     }
-    
-    var body: some View {
-        NavigationView{
-            VStack {
-                //gets the list of posts as well as puts it in the order
-                List(posts, id: \.createdAt) { post in
-                    VStack(alignment: .leading){
-                        Text(post.contents)
-                            .font(.headline)
-                        Text("Posted by: \(post.user.name)")
-                            .font(.subheadline)
-                        Text("Posted at: \(post.createdAt.formatted())")
-                            .font(.subheadline)
+
+        var body: some View {
+            NavigationView{
+                VStack {
+                    //gets the list of posts as well as puts it in the order
+                    List(posts, id: \.createdAt) { post in
+                        VStack(alignment: .leading){
+                                HStack{
+                                    Text(post.contents)
+                                        .font(.headline)
+                                    
+                                    Spacer()
+                                }
+                                .padding()
+                                    
+                                    if isAdmin{
+                                        NavigationLink(destination: deletePostView()){
+                                            Image(systemName: "trash")
+                                                .foregroundColor(.red)
+                                                .padding()
+                                        }
+                                    }
+                                
+                            
                         
-                        ForEach(post.comments, id: \.createdAt){ comment in
-                            Text(comment.contents)
-                                .font(.body)
-                                .padding(.leading)
-                        }
-                        
-                        if isLoggedIn{
-                            //when the user is logged in they will see the comment button and can make a comment
-                            NavigationLink(destination: newCommentView())
-                            {
-                                Text("Add a comment").font(.caption).foregroundColor(.blue)
-                            }
-// THIS IS ALL OLD CODE, I DID not want to delete it bc it helps see //thought process
-//                                Button(action: {
-//                                    selectedPost = post
-//                                    showNewCommentForm.toggle()
-//                                }){
-//                                    Text("Add a comment")
-//                                        .font(.caption)
-//                                        .foregroundColor(.blue)
-//                                }
-//                                .sheet(isPresented: $showNewCommentForm)
-//                                {
-//                                    VStack
-//                                    {
-//                                        Text("Add a comment").font(.title2)
-//                                        TextField("Enter comment", text: $newCommentString)
-//                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-//                                            .padding()
-//                                        Button("Submit")
-//                                        {
-//
-//                                        }
-//
-//                                    }
-//                                }
-                        }
-                    }
-                }
-                if isLoggedIn{
-                    NavigationLink(destination: NewPostView())
-                    {
-                        Text("Create New Post")
-                    }
-                    .bold()
-                    .padding(.top)
-                    //OLD LOG OUT OR LOG IN CODE. Feel free to delete but is simpler, so can help //see thought process
-//                    Button(action: {
-//                        logout()
-//                    }) {
-//                        Text("Logout")
-//                            .font(.headline)
-//                            .foregroundColor(.blue)
-//                            .padding()
-//                            .frame(maxWidth: .infinity)
-//                            .cornerRadius(10)
-//                    }
-//                    
-//                    
-                }
-//                if !isLoggedIn{
-//                    NavigationLink(destination: LoginView())
-//                    {
-//                        Text("Login")
-//                    }
-//                    .bold()
-//                    .padding(.top)
-//                }
                 
-            }
-            //This is whatt allows us to have to login and logout in the top corner
-            .navigationTitle("Posts")
-            .navigationBarItems(trailing: HStack {
-                if !isLoggedIn {
-                    NavigationLink(destination: LoginView()) {
-                        Text("Login")
-                            .font(.headline)
-                            .foregroundColor(.blue)
+                            Text(post.contents)
+                                .font(.headline)
+                            Text("Posted by: \(post.user.name)")
+                                .font(.subheadline)
+                            Text("Posted at: \(post.createdAt.formatted())")
+                                .font(.subheadline)
+                            
+                            
+                            ForEach(post.comments, id: \.createdAt){ comment in
+                                Text(comment.contents)
+                                    .font(.body)
+                                    .padding(.leading)
+                                
+                            }
+                            
+                            if isLoggedIn{
+                                //when the user is logged in they will see the comment button and can make a comment
+                                NavigationLink(destination: newCommentView())
+                                {
+                                    Text("Add a comment").font(.caption).foregroundColor(.blue)
+                                }
+                                // THIS IS ALL OLD CODE, I DID not want to delete it bc it helps see //thought process
+                                //                                Button(action: {
+                                //                                    selectedPost = post
+                                //                                    showNewCommentForm.toggle()
+                                //                                }){
+                                //                                    Text("Add a comment")
+                                //                                        .font(.caption)
+                                //                                        .foregroundColor(.blue)
+                                //                                }
+                                //                                .sheet(isPresented: $showNewCommentForm)
+                                //                                {
+                                //                                    VStack
+                                //                                    {
+                                //                                        Text("Add a comment").font(.title2)
+                                //                                        TextField("Enter comment", text: $newCommentString)
+                                //                                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                                //                                            .padding()
+                                //                                        Button("Submit")
+                                //                                        {
+                                //
+                                //                                        }
+                                //
+                                //                                    }
+                                //                                }
+                            }
+                        
+                        }
                     }
-                } else {
-                    Button(action: {
-                        logout()
-                    }) {
-                        Text("Logout")
-                            .font(.headline)
-                            .foregroundColor(.blue)
+                    if isLoggedIn{
+                        NavigationLink(destination: NewPostView())
+                        {
+                            Text("Create New Post")
+                        }
+                        .bold()
+                        .padding(.top)
+                        //OLD LOG OUT OR LOG IN CODE. Feel free to delete but is simpler, so can help //see thought process
+                        //                    Button(action: {
+                        //                        logout()
+                        //                    }) {
+                        //                        Text("Logout")
+                        //                            .font(.headline)
+                        //                            .foregroundColor(.blue)
+                        //                            .padding()
+                        //                            .frame(maxWidth: .infinity)
+                        //                            .cornerRadius(10)
+                        //                    }
+                        //
+                        //
                     }
+                    //                if !isLoggedIn{
+                    //                    NavigationLink(destination: LoginView())
+                    //                    {
+                    //                        Text("Login")
+                    //                    }
+                    //                    .bold()
+                    //                    .padding(.top)
+                    //                }
+                    
                 }
-            })
+                //This is whatt allows us to have to login and logout in the top corner
+                .navigationTitle("Posts")
+                .navigationBarItems(trailing: HStack {
+                    if !isLoggedIn {
+                        NavigationLink(destination: LoginView()) {
+                            Text("Login")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+                        }
+                    } else {
+                        Button(action: {
+                            logout()
+                        }) {
+                            Text("Logout")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                })
+            }
+            .onAppear{
+                setupMockData()
+            }
         }
-        .onAppear{
-            setupMockData()
+        func logout(){
+            isLoggedIn = false
         }
     }
-    func logout(){
-        isLoggedIn = false
+    
+    
+    #Preview {
+        ContentView()
     }
-}
+    
+    //    init(loginState: LoginState) {
+    //        self._loginState = State(initialValue: loginState)
+    //    }
+    
+    //#Preview {
+    //    ContentView(loginState: .notLoggedIn)
+    //}
+    
+    //            switch loginState {
+    //            case .notLoggedIn:
+    //                //LoginView(loginState: $loginState)
+    //                ForumView(loginState: $loginState)
+    //            case .userLoggedIn:
+    //                UserView(loginState: $loginState)
+    //            case .adminLoggedIn:
+    //                AdminView(loginState: $loginState)
+    //            }
+    //        }
+    //        .padding()
+    //    }
+    //}
 
-
-#Preview {
-    ContentView()
-}
-
-//    init(loginState: LoginState) {
-//        self._loginState = State(initialValue: loginState)
-//    }
-
-//#Preview {
-//    ContentView(loginState: .notLoggedIn)
-//}
-
-//            switch loginState {
-//            case .notLoggedIn:
-//                //LoginView(loginState: $loginState)
-//                ForumView(loginState: $loginState)
-//            case .userLoggedIn:
-//                UserView(loginState: $loginState)
-//            case .adminLoggedIn:
-//                AdminView(loginState: $loginState)
-//            }
-//        }
-//        .padding()
-//    }
-//}
