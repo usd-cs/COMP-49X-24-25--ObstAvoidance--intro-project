@@ -79,10 +79,11 @@ struct ContentView: View {
                             }
                         }
                         
-                        ForEach(post.comments, id: \.createdAt) { comment in
-                            Text(comment.contents)
-                                .font(.body)
-                                .padding(.leading)
+                        NavigationLink(destination: commentView(comments: post.comments)) {
+                                Text("View all comments")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                                    .padding(.top, 5)
                         }
                         
                         if isLoggedIn {
@@ -134,25 +135,4 @@ struct ContentView: View {
         ContentView()
     }
     
-    //    init(loginState: LoginState) {
-    //        self._loginState = State(initialValue: loginState)
-    //    }
-    
-    //#Preview {
-    //    ContentView(loginState: .notLoggedIn)
-    //}
-    
-    //            switch loginState {
-    //            case .notLoggedIn:
-    //                //LoginView(loginState: $loginState)
-    //                ForumView(loginState: $loginState)
-    //            case .userLoggedIn:
-    //                UserView(loginState: $loginState)
-    //            case .adminLoggedIn:
-    //                AdminView(loginState: $loginState)
-    //            }
-    //        }
-    //        .padding()
-    //    }
-    //}
 
