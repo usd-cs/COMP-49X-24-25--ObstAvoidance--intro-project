@@ -20,8 +20,10 @@ struct forumApp: App {
                 .modelContainer(for: [ User.self, Post.self , Comment.self])
 
 //            ContentView(loginState: loginState)
+            
     
         }
+        
   }
 }
 #Preview {

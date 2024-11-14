@@ -108,6 +108,7 @@ struct ContentView: View {
                 )
             }
             .onAppear {
+                DataUtils.printAllUsers(context: context)
                 isAdminStatus()
                 print("User Set up")
             }

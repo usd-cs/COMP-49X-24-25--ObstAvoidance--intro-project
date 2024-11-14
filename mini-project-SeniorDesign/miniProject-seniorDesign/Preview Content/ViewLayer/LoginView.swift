@@ -80,6 +80,7 @@ struct LoginView: View {
                 isLoggedIn = true
                 print("Current user \(String(describing: currentUser?.name))")
                 currentUser = user
+                
             }
         } catch {
             print("Login failed: \(error.localizedDescription)")

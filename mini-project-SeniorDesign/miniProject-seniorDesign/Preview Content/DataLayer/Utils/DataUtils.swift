@@ -161,17 +161,52 @@ struct DataUtils
         return user
     }
     
-    static func printAllUsers(context: ModelContext) {
+//    static func printAllUsers(context: ModelContext) {
+//        let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
+//        //print(fetchRequest)
+//        do {
+//            let users: [User] = try context.fetch(fetchRequest) // Fetch all users
+//            print("Users in Database:")
+//            for user in users {
+//                print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt \(user.salt)")
+//            }
+//        } catch {
+//            print("Failed to fetch users: \(error.localizedDescription)")
+//        }
+//    }
+    static func printAllUsers(context: ModelContext)
+    {
         let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
-        //print(fetchRequest)
+        
         do {
             let users: [User] = try context.fetch(fetchRequest) // Fetch all users
-            print("Users in Database:")
+            
+            // Filter independent users (non-admins)
+            // Prepare output to write to file
+            var seenNames = Set<String>()
+
+            var output = "Independent Users in Database:\n"
+            
             for user in users {
-                print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt \(user.salt)")
+                //HARD CODED TO MAKE SURE THAT WE OLY HAVE EACH USER ONCE USERS
+                if !seenNames.contains(user.name){
+                    seenNames.insert(user.name)
+                    print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt: \(user.salt)\n")
+                    output += "Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt: \(user.salt)\n"
+                }
             }
+            
+            // Get the file path for saving the output
+            let fileManager = FileManager.default
+            let path = fileManager.temporaryDirectory.appendingPathComponent("independent_users.txt")
+            
+            // Write output to the file
+            try output.write(to: path, atomically: true, encoding: .utf8)
+            
+            print("Independent users have been written to: \(path.path)")
+            
         } catch {
-            print("Failed to fetch users: \(error.localizedDescription)")
+            print("Failed to fetch users or write to file: \(error.localizedDescription)")
         }
     }
     

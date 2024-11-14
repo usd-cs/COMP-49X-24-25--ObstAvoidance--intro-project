@@ -70,3 +70,4 @@ final class Comment {
         self.createdAt = createdAt
     }
 }
+
