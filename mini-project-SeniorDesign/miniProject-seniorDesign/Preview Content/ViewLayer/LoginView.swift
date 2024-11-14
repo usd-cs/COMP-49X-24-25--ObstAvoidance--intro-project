@@ -81,6 +81,7 @@ struct LoginView: View {
             let user = try userLogin(username: username, password: password, context: context) // Pass the user and context
             if user != nil {
                 isLoggedIn = true
+                print("Current user \(currentUser?.name)")
                 currentUser = user
              //   print("User logged in: \(user.name)")
             }

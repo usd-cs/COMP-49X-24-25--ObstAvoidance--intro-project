@@ -18,7 +18,7 @@ struct NewPostView: View {
     var loggedUsers: [User]
     var currentUser: User
     var context: ModelContext
-    //@Binding var refreshTrigger: Bool
+    @Binding var refreshTrigger: Bool
     var body: some View {
         VStack
         {
@@ -48,7 +48,7 @@ struct NewPostView: View {
                 print("New post created: \(newPost.contents)")
                 postContent = "" // Clear the post content
                 try context.save()
-     //           refreshTrigger.toggle()
+                refreshTrigger.toggle()
  //               dismiss()
             } else {
                 errorMessage = "Failed to create post. User might not be logged in."

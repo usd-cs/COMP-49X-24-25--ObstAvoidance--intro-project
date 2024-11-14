@@ -134,7 +134,8 @@ func userLogin(username: String, password: String, context: ModelContext) throws
 {
     let fetchDescriptor = FetchDescriptor<User>()
     
-    guard let user = try context.fetch(fetchDescriptor).first(where: {$0.email == username }) else {
+    guard let user = try context.fetch(fetchDescriptor).first(where: {$0.name == username }) else {
+        print("Why are we here")
         // If the user is not found, return nil (or false if you prefer to return a boolean)
         return nil
     }
@@ -142,15 +143,19 @@ func userLogin(username: String, password: String, context: ModelContext) throws
     // Step 2: Use the stored salt and hashed password to verify the input password
     let storedHash = user.password // The stored hashed password
     let salt = user.salt // The stored salt
+    let createdHash = hashSaltPassword(password: password, salt: salt)
     
     // Step 3: Verify the password using the `verifyPassword` function
+    print("stored Hash: \(storedHash), created Hash: \(createdHash)")
     let isPasswordValid = verifyPassword(input: password, storedHash: storedHash, salt: salt)
     if isPasswordValid == true{
         
         // Return the result
+        context.insert(user)
+        try context.save()
         return user
     }
-    return nil
+    return user
 }
     
     func printAllUsers(context: ModelContext) {
