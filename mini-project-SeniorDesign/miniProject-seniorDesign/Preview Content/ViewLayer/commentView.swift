@@ -14,12 +14,16 @@ struct commentView: View{
     @State var comments: [Comment]
     let isAdmin: Bool
     let isLoggedIn: Bool
+    let selectedPost: Post
+    let currentUser: User
+    
     
     @Environment(\.modelContext) var context
     
     var body : some View{
         VStack{
             List(comments, id: \.createdAt) { comment in
+                Text(comment.contents)
                 
                 
                 
@@ -50,7 +54,7 @@ struct commentView: View{
             .navigationTitle("Comments")
             
             if isLoggedIn && isAdmin {
-                NavigationLink(destination: newCommentView()) {
+                NavigationLink(destination: newCommentView(selectedPost: selectedPost, currentUser: currentUser, comments: $comments)) {
                     Text("Add a comment")
                         .font(.caption)
                         .foregroundColor(.blue)

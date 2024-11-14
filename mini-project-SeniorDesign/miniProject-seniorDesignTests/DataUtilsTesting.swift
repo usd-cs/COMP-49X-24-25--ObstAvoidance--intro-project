@@ -94,7 +94,7 @@ class DataUtilsTesting {
         let context = self.modelContext
         var commentsInContext: [miniProject_seniorDesign.Comment] = []
         
-        let user = User(name: "Test User", email: "testuser@example.com", admin: false)
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true)
         context.insert(user)
             
         let post = Post(user: user, contents: "Test post content")
@@ -107,7 +107,6 @@ class DataUtilsTesting {
         
         #expect(commentsInContext.contains { $0 === comment } == true)
         
-        // Test delete
         do {
             try DataUtils.deleteComment(for: context, comment: comment)
             commentsInContext.removeAll { $0 === comment }

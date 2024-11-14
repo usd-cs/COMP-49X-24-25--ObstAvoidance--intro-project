@@ -125,7 +125,16 @@ struct DataUtils {
         
     }
     
-    static func addComment(for context: ModelContext, comment: String)throws{
+    static func addComment(for context: ModelContext, post: Post, user: User, contents: String)throws -> Comment{
+        let comment = Comment(user: user, post:post, contents: contents, createdAt: Date())
+        context.insert(comment)
+        do{
+            try context.save()
+            return comment
+        } catch{
+            print("Error: Comment could not be saved to the database")
+            throw DataError.couldNotSave
+        }
         
     }
     
