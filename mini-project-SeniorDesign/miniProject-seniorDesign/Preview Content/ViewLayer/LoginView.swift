@@ -5,12 +5,18 @@
 //  Created by Darien Aranda on 11/9/24.
 //
 import SwiftUI
+import SwiftData
 
 struct LoginView: View {
     // @Binding var loginState: LoginState
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isSecure: Bool = false
+    //var currentUser: User
+    @Binding var isLoggedIn: Bool
+    @Binding var currentUser: User?
+    var context: ModelContext
+    
     
     var body: some View {
         VStack{
@@ -70,17 +76,17 @@ struct LoginView: View {
     func login(){
         //Actions for the button added here
         print("Username: \(username), Password: \(password)" )
-//        do {
-//            // Attempt to log in the user using DataUtils
-//            let success = try DataUtils.userLogin(for: user, context: context) // Pass the user and context
-//            if success == true {
-//                isLoggedIn = true
-//                currentUser = user
-//                print("User logged in: \(user.name)")
-//            }
-//        } catch {
-//            print("Login failed: \(error.localizedDescription)")
-//        }
+        do {
+            // Attempt to log in the user using DataUtils
+            let user = try userLogin(username: username, password: password, context: context) // Pass the user and context
+            if user != nil {
+                isLoggedIn = true
+                currentUser = user
+             //   print("User logged in: \(user.name)")
+            }
+        } catch {
+            print("Login failed: \(error.localizedDescription)")
+        }
     }
 }
     

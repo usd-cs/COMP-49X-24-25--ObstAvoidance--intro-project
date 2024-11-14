@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+
 //
 struct NewPostView: View {
     @State private var postContent: String = ""

@@ -7,6 +7,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import CryptoKit
 
 //enum LoginState {
 //    case notLoggedIn
@@ -106,7 +107,7 @@ struct ContentView: View {
             .navigationTitle("Posts")
             .navigationBarItems(trailing: HStack {
                 if !isLoggedIn {
-                    NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, currentUser: $currentUser,context: context)) {
                         Text("Login")
                             .font(.headline)
                             .foregroundColor(.blue)
@@ -134,7 +135,7 @@ struct ContentView: View {
                 )
             }
             .onAppear {
-                      //      setupTestUser()  // Initialize the test user on appear
+                            setupTestUser()  // Initialize the test user on appear
                             print("User Set up")
 //                DataUtils.printAllUsers(context: context)
 //                DataUtils.printAllPosts(context: context)
@@ -152,35 +153,51 @@ struct ContentView: View {
         
     }
     private func setupTestUser() {
-        let testUser = User(name: "Test User", email: "test@example.com", admin: false)
-        context.insert(testUser)
+        // Example password
+        let plainPassword = "password123"
+        
+        // Salt and encrypt the password
+        let salt = createSalt() // Assuming you have a function to generate a salt
+        let encryptedPassword = hashSaltPassword(password: plainPassword, salt: salt)
+        
+        // Create a test user with the encrypted password and salt
+        let testUser = User(name: "Test User", email: "test@example.com", admin: false, password: encryptedPassword, salt: salt)
+        
+        context.insert(testUser) // Insert the user into the context
+        
+        // Create posts for the test user
         let customDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
         let customDate2 = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
-
-        // Create a couple of posts for the test user
+        
         let post1 = Post(user: testUser, contents: "This is the first post by Test User.", createdAt: customDate)
         let post2 = Post(user: testUser, contents: "This is another post by Test User.", createdAt: customDate2)
         
-        // Insert posts into the context
         context.insert(post1)
         context.insert(post2)
-
-        // Assign posts to the test user
-        testUser.posts.append(post1)
-        testUser.posts.append(post2)
+        
+        // Create comments for the posts
+        let comment1 = Comment(user: testUser, post: post1, contents: "Great post!", createdAt: customDate)
+        let comment2 = Comment(user: testUser, post: post1, contents: "Thanks for sharing.", createdAt: customDate2)
+        let comment3 = Comment(user: testUser, post: post2, contents: "Interesting perspective.", createdAt: customDate)
+        
+        context.insert(comment1)
+        context.insert(comment2)
+        context.insert(comment3)
         
         // Save the context
         do {
             try context.save()
-            print("Test user and posts saved successfully: \(testUser.name)")
+            print("Test user, posts, and comments saved successfully: \(testUser.name)")
             
-            // Optional: Print all users and their posts for verification
+            // Optional: Print all users, posts, and comments for verification
             printAllUsers(context: context)
             printAllPosts(context: context)
+            printAllComments(context: context)
             
+            // Assign the test user to the currentUser variable
             currentUser = testUser
         } catch {
-            print("Failed to save test user or posts: \(error)")
+            print("Failed to save test user, posts, or comments: \(error)")
         }
     }
     func logout() {

@@ -79,9 +79,9 @@ func addPost(for commenting_user: User, post_content: String, logged_users: [Use
             do{
                 try context.save()
                 print("Printing inside of data utils: ")
-                printAllUsers(context: context)
-                printAllPosts(context: context)
-                printAllComments(context: context)
+//                printAllUsers(context: context)
+//                printAllPosts(context: context)
+//                printAllComments(context: context)
                 return new_post //if post is succesfully created we return the post to indicate this
             }
             catch{
@@ -110,61 +110,86 @@ func addPost(for commenting_user: User, post_content: String, logged_users: [Use
     ///- Throws function throws an error if saving new user in database fails or if the user in question has no emial (unique identifier)
     ///
     ///- Returns void
-    func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
-        
-        //fist we check if the user object being passed has an email
-        guard !user_to_login.email.isEmpty else{throw DataError.invalidContent}
-        
-        
-        context.insert(user_to_login) //insert the user into the context layer
-        
-        do{
-            try context.save()
-            return true
-        }
-        catch{
-            print("error saving user")
-            throw DataError.couldNotLoginUser
-        }
-        
-        
+//    func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
+//        
+//        //fist we check if the user object being passed has an email
+//        guard !user_to_login.email.isEmpty else{throw DataError.invalidContent}
+//        
+//        
+//        context.insert(user_to_login) //insert the user into the context layer
+//        
+//        do{
+//            try context.save()
+//            return true
+//        }
+//        catch{
+//            print("error saving user")
+//            throw DataError.couldNotLoginUser
+//        }
+//        
+//        
+//    }
+
+func userLogin(username: String, password: String, context: ModelContext) throws -> User?
+{
+    let fetchDescriptor = FetchDescriptor<User>()
+    
+    guard let user = try context.fetch(fetchDescriptor).first(where: {$0.email == username }) else {
+        // If the user is not found, return nil (or false if you prefer to return a boolean)
+        return nil
     }
+    
+    // Step 2: Use the stored salt and hashed password to verify the input password
+    let storedHash = user.password // The stored hashed password
+    let salt = user.salt // The stored salt
+    
+    // Step 3: Verify the password using the `verifyPassword` function
+    let isPasswordValid = verifyPassword(input: password, storedHash: storedHash, salt: salt)
+    if isPasswordValid == true{
+        
+        // Return the result
+        return user
+    }
+    return nil
+}
+    
     func printAllUsers(context: ModelContext) {
-            let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
+        let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
         //print(fetchRequest)
-            do {
-                let users: [User] = try context.fetch(fetchRequest) // Fetch all users
-                print("Users in Database:")
-                for user in users {
-                    print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin)")
-                }
-            } catch {
-                print("Failed to fetch users: \(error.localizedDescription)")
+        do {
+            let users: [User] = try context.fetch(fetchRequest) // Fetch all users
+            print("Users in Database:")
+            for user in users {
+                print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt \(user.salt)")
             }
+        } catch {
+            print("Failed to fetch users: \(error.localizedDescription)")
         }
+    }
+    
+    func printAllPosts(context: ModelContext) {
+        let fetchRequest = FetchDescriptor<Post>() // Create a fetch descriptor for Post
+        do {
+            let posts: [Post] = try context.fetch(fetchRequest) // Fetch all posts
+            print("Posts in Database:")
+            for post in posts {
+                print("Contents: \(post.contents), Created At: \(post.createdAt), Posted By: \(post.user.name)")
+            }
+        } catch {
+            print("Failed to fetch posts: \(error.localizedDescription)")
+        }
+    }
+    
+    func printAllComments(context: ModelContext) {
+        let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
+        do {
+            let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
+            print("Comments in Database:")
+            for comment in comments {
+                print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
+            }
+        } catch {
+            print("Failed to fetch comments: \(error.localizedDescription)")
+        }
+    }
 
-        func printAllPosts(context: ModelContext) {
-            let fetchRequest = FetchDescriptor<Post>() // Create a fetch descriptor for Post
-            do {
-                let posts: [Post] = try context.fetch(fetchRequest) // Fetch all posts
-                print("Posts in Database:")
-                for post in posts {
-                    print("Contents: \(post.contents), Created At: \(post.createdAt), Posted By: \(post.user.name)")
-                }
-            } catch {
-                print("Failed to fetch posts: \(error.localizedDescription)")
-            }
-        }
-
-        func printAllComments(context: ModelContext) {
-            let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
-            do {
-                let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
-                print("Comments in Database:")
-                for comment in comments {
-                    print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
-                }
-            } catch {
-                print("Failed to fetch comments: \(error.localizedDescription)")
-            }
-        }

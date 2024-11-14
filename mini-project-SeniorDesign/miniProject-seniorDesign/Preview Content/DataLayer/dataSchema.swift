@@ -16,6 +16,8 @@ final class User { //may need to make this Identifiable
     var name: String
     var email: String
     var admin: Bool
+    var password: String
+    var salt: String
     
     // Revised One-to-many relationship to posts
     @Relationship(inverse: \Post.user) var posts: [Post] = []
@@ -23,10 +25,12 @@ final class User { //may need to make this Identifiable
     // Revised One-to-many relationship to comments
     @Relationship(inverse: \Comment.user) var comments: [Comment] = []
 
-    init(name: String, email: String, admin: Bool) {
+    init(name: String, email: String, admin: Bool, password: String, salt: String) {
         self.name = name
         self.email = email
         self.admin = admin
+        self.password = password
+        self.salt = salt
     }
 }
 
