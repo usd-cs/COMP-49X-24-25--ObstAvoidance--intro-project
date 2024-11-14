@@ -9,29 +9,10 @@ import SwiftData
 import Foundation
 import CryptoKit
 
-//enum LoginState {
-//    case notLoggedIn
-//    case userLoggedIn
-//    case adminLoggedIn
-//var container: ModelContainer
-//var modelContext: ModelContext
-//modelContext = container.mainContext
-//}
-
 struct ContentView: View {
-    
-    //    @State var loginState: LoginState
-//    @State private var isLoggedIn = true
-//    @State private var isAdmin = true
-//    @State private var showNewPostForm = false
-//    @State private var showNewCommentForm = false
-//    @State private var newCommentString = ""
-//    @State private var selectedPost: Post?
-//    @State private var posts: [Post] = []
-//    @State private var showDeleteConfirmation = false
-//    @State private var postToDelete: Post? = nil
-    @State private var isLoggedIn = true
-    @State private var isAdmin = true
+
+    @State private var isLoggedIn = false
+    @State private var isAdmin = false
     @State private var showDeleteConfirmation = false
     @State private var postToDelete: Post? = nil
     @Environment(\.modelContext) var context
@@ -41,11 +22,6 @@ struct ContentView: View {
     @State private var isCreatingPost = false  // For triggering the new post  form
     @State private var currentUser: User? = nil
     @State private var refreshTrigger = false
-  
-
-
-
-    // Function to set up mock data
 
 
     var body: some View {
@@ -95,7 +71,6 @@ struct ContentView: View {
                 }
                 .id(refreshTrigger)
                 if isLoggedIn, let user = currentUser {
-                 //   print("Current user \(currentUser ?? default none)")
                     NavigationLink(destination: NewPostView(loggedUsers: loggedUsers, currentUser: user, context: context, refreshTrigger: $refreshTrigger)) {
                         Text("Create New Post")
                     }
@@ -120,8 +95,6 @@ struct ContentView: View {
                     }
                 }
             })
-   //         .onAppear { setupMockData() }
-
             .alert(isPresented: $showDeleteConfirmation) {
                 Alert(
                     title: Text("Are you sure?"),
@@ -135,24 +108,16 @@ struct ContentView: View {
                 )
             }
             .onAppear {
-       //                     setupTestUser()  // Initialize the test user on appear
                             print("User Set up")
-//                DataUtils.printAllUsers(context: context)
-//                DataUtils.printAllPosts(context: context)
-//                DataUtils.printAllComments(context: context)
-                        }
-            .onAppear {
-                            // Print all data when the view appears
 
                         }
-//            .onAppear{
-//                print("contentViw appear, posts reloaded")
-//            }
+            .onAppear {
+                        }
 
         }
         
     }
-    private func setupTestUser() {
+/*    private func setupTestUser() {
         // Helper function to create a user with salted and hashed password
         func createUser(name: String, email: String, plainPassword: String, admin: Bool) -> User {
             let salt = createSalt()
@@ -217,7 +182,7 @@ struct ContentView: View {
         } catch {
             print("Failed to save test users, posts, or comments: \(error)")
         }
-    }
+    }*/
     func logout() {
         isLoggedIn = false
     }

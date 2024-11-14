@@ -68,7 +68,6 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10)
             }
-            
         }
         .padding()
     }
