@@ -108,14 +108,10 @@ struct ContentView: View {
                 )
             }
             .onAppear {
-                            print("User Set up")
-
-                        }
-            .onAppear {
-                        }
-
+                isAdminStatus()
+                print("User Set up")
+            }
         }
-        
     }
 /*    private func setupTestUser() {
         // Helper function to create a user with salted and hashed password
@@ -183,8 +179,14 @@ struct ContentView: View {
             print("Failed to save test users, posts, or comments: \(error)")
         }
     }*/
+    
+    private func isAdminStatus(){
+        isAdmin = currentUser?.admin ?? false
+    }
+    
     func logout() {
         isLoggedIn = false
+        isAdmin = false
     }
     func deletePost(_ context: ModelContext, post: Post) {
         do {

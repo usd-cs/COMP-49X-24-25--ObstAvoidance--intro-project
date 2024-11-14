@@ -8,11 +8,9 @@ import SwiftUI
 import SwiftData
 
 struct LoginView: View {
-    // @Binding var loginState: LoginState
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isSecure: Bool = false
-    //var currentUser: User
     @Binding var isLoggedIn: Bool
     @Binding var currentUser: User?
     var context: ModelContext
@@ -82,7 +80,6 @@ struct LoginView: View {
                 isLoggedIn = true
                 print("Current user \(String(describing: currentUser?.name))")
                 currentUser = user
-             //   print("User logged in: \(user.name)")
             }
         } catch {
             print("Login failed: \(error.localizedDescription)")
