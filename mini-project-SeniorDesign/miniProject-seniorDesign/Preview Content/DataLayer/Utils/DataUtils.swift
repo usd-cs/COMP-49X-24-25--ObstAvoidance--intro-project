@@ -194,7 +194,7 @@ struct DataUtils
             let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
             print("Comments in Database:")
             for comment in comments {
-                print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
+                //print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
             }
         } catch {
             print("Failed to fetch comments: \(error.localizedDescription)")
@@ -228,13 +228,17 @@ struct DataUtils
     
     static func deletePost(for context: ModelContext, post: Post)throws{
         context.delete(post)
+        let comments = post.comments
+            for comment in comments {
+                context.delete(comment)
+            }
         
-        //do{
-            //try context.save()
-        //}
-        //catch{
-            //print("Error: Post could not be deleted from database")
-            //throw DataError.couldNotSave
-        //}
+        do{
+            try context.save()
+        }
+        catch{
+            print("Error: Post could not be deleted from database")
+            throw DataError.couldNotSave
+        }
     }
 }

@@ -61,9 +61,9 @@ final class Comment {
     var user: User
     
     // Revised Many-to-one relationship to post
-    var post: Post
+    var post: Post? = nil
 
-    init(user: User, post: Post, contents: String, createdAt: Date = Date()) {
+    init(user: User, post: Post? = nil, contents: String, createdAt: Date = Date()) {
         self.user = user
         self.post = post
         self.contents = contents
