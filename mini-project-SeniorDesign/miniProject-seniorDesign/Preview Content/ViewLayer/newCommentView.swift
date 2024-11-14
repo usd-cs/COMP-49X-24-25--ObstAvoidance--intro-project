@@ -39,6 +39,7 @@ struct newCommentView: View{
             newCommentString = ""
             comments.append(comment)
             
+            
         }catch{
             print("Failed to add post: \(error)")
         }

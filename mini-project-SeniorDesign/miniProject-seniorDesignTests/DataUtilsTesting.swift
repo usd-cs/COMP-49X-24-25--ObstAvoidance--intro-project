@@ -116,6 +116,47 @@ class DataUtilsTesting {
             #expect(Bool(false), "Error deleting comment: \(error)")
         }
     }
+    @Test("add a empty comment")func addEmptyComment(){
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        let contents = ""
+        
+        do{
+            let comment = try DataUtils.addComment(for: context, post: post, user: user, contents: contents)
+            commentsInContext.append(comment)
+            #expect(Bool(false), "Expected an error when adding an empty comment, but it succeeded.")
+                   
+        }catch{
+            #expect(commentsInContext.isEmpty == true, "No comment should be added for empty content")
+        }
+    }
+    @Test("add a comment")func addComment(){
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        let contents = "This is a test comment"
+        do{
+            let comment = try DataUtils.addComment(for: context, post: post, user: user, contents: contents)
+            commentsInContext.append(comment)
+            #expect(!commentsInContext.isEmpty == true)
+                   
+        }catch{
+            #expect(Bool(false), "Error adding a valid comment: \(error)")
+        }
+    }
 
 }
 

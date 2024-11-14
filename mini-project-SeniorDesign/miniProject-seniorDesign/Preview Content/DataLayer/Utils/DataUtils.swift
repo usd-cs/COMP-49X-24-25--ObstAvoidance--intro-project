@@ -126,6 +126,7 @@ struct DataUtils {
     }
     
     static func addComment(for context: ModelContext, post: Post, user: User, contents: String)throws -> Comment{
+        guard !contents.isEmpty else { throw DataError.invalidContent }
         let comment = Comment(user: user, post:post, contents: contents, createdAt: Date())
         context.insert(comment)
         do{
