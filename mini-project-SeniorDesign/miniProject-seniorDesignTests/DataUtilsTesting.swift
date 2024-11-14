@@ -88,6 +88,74 @@ class DataUtilsTesting {
         //#expect(modelContext.contains(result!)) im not too sure on how to check if the post was acutally added to the database but given that the .save() did not cause any error i'm assuming everything is according to plan
         
     }
+    @Test("delete a comment") func deleteComment() {
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true, password: "oof", salt: salt)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        
+        let comment = Comment(user: user, post: post, contents: "Test comment", createdAt: Date())
+        context.insert(comment)
+        commentsInContext.append(comment)
+        
+        #expect(commentsInContext.contains { $0 === comment } == true)
+        
+        do {
+            try DataUtils.deleteComment(for: context, comment: comment)
+            commentsInContext.removeAll { $0 === comment }
+            let isCommentDeleted = !commentsInContext.contains { $0 === comment }
+            #expect(isCommentDeleted == true)
+        } catch {
+            #expect(Bool(false), "Error deleting comment: \(error)")
+        }
+    }
+    @Test("add a empty comment")func addEmptyComment(){
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true, password: "oof", salt: salt)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        let contents = ""
+        
+        do{
+            let comment = try DataUtils.addComment(for: context, post: post, user: user, contents: contents)
+            commentsInContext.append(comment)
+            #expect(Bool(false), "Expected an error when adding an empty comment, but it succeeded.")
+                   
+        }catch{
+            #expect(commentsInContext.isEmpty == true, "No comment should be added for empty content")
+        }
+    }
+    @Test("add a comment")func addComment(){
+        let context = self.modelContext
+        var commentsInContext: [miniProject_seniorDesign.Comment] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true, password: "oof", salt: salt)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        
+        let contents = "This is a test comment"
+        do{
+            let comment = try DataUtils.addComment(for: context, post: post, user: user, contents: contents)
+            commentsInContext.append(comment)
+            #expect(!commentsInContext.isEmpty == true)
+                   
+        }catch{
+            #expect(Bool(false), "Error adding a valid comment: \(error)")
+        }
+    }
+    
     
 //    @Test("user login with an empty email") func userInvalidLogin() {
 //        let logged_user = mockLoggedUsers[0]

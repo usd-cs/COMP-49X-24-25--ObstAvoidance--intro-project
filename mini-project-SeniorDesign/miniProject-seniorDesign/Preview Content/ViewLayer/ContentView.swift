@@ -83,7 +83,7 @@ struct ContentView: View {
 
                         }
                         
-                        NavigationLink(destination: commentView(comments: post.comments, isAdmin: isAdmin, isLoggedIn: isLoggedIn)) {
+                        NavigationLink(destination: commentView(comments: post.comments, isAdmin: isAdmin, isLoggedIn: isLoggedIn, selectedPost: post, currentUser: post.user)) {
                                 Text("View all comments")
                                     .font(.caption)
                                     .foregroundColor(.blue)

@@ -200,4 +200,29 @@ struct DataUtils
             print("Failed to fetch comments: \(error.localizedDescription)")
         }
     }
+    static func addComment(for context: ModelContext, post: Post, user: User, contents: String)throws -> Comment{
+        guard !contents.isEmpty else { throw DataError.invalidContent }
+        let comment = Comment(user: user, post:post, contents: contents, createdAt: Date())
+        context.insert(comment)
+        do{
+            try context.save()
+            return comment
+        } catch{
+            print("Error: Comment could not be saved to the database")
+            throw DataError.couldNotSave
+        }
+        
+    }
+    
+    static func deleteComment(for context: ModelContext, comment: Comment)throws {
+        context.delete(comment)
+        
+        do{
+            try context.save()
+        }
+        catch{
+            print("Error: Comment could not be delted from database")
+            throw DataError.couldNotSave
+        }
+    }
 }
