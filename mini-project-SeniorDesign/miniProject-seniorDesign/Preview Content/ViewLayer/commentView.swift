@@ -23,10 +23,6 @@ struct commentView: View{
     var body : some View{
         VStack{
             List(comments, id: \.createdAt) { comment in
-                Text(comment.contents)
-                
-                
-                
                 VStack(alignment: .leading) {
                     HStack{
                         VStack{

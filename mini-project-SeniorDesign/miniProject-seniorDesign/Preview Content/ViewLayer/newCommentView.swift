@@ -38,6 +38,7 @@ struct newCommentView: View{
             let comment = try DataUtils.addComment(for: context, post: selectedPost, user: currentUser, contents: newCommentString)
             newCommentString = ""
             comments.append(comment)
+            
         }catch{
             print("Failed to add post: \(error)")
         }
