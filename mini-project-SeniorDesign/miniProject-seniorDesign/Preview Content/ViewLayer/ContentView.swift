@@ -128,7 +128,7 @@ struct ContentView: View {
                     message: Text("Do you really want to delete this post? This action cannot be undone."),
                     primaryButton: .destructive(Text("Delete")) {
                         if let post = postToDelete {
-                            deletePost(post)
+                            deletePost(context, post: post)
                         }
                     },
                     secondaryButton: .cancel()
@@ -221,11 +221,18 @@ struct ContentView: View {
     func logout() {
         isLoggedIn = false
     }
+    func deletePost(_ context: ModelContext, post: Post) {
+        do {
+            try DataUtils.deletePost(for: context, post: post)
+            print("Post deleted: \(post.contents)")
+        } catch {
+            print("Failed to delete post: \(error)")
+        }
+        print("Post Delete Clicked")
+    }
 }
-    
-func deletePost(_ post: Post) {
-    print("Post Delete Clicked")
-}
+
+
 
 
     

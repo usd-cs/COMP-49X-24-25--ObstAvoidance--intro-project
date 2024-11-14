@@ -225,4 +225,16 @@ struct DataUtils
             throw DataError.couldNotSave
         }
     }
+    
+    static func deletePost(for context: ModelContext, post: Post)throws{
+        context.delete(post)
+        
+        //do{
+            //try context.save()
+        //}
+        //catch{
+            //print("Error: Post could not be deleted from database")
+            //throw DataError.couldNotSave
+        //}
+    }
 }

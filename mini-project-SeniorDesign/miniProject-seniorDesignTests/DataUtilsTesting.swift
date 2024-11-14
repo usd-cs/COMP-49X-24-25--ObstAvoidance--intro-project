@@ -155,6 +155,28 @@ class DataUtilsTesting {
             #expect(Bool(false), "Error adding a valid comment: \(error)")
         }
     }
+    @Test("delete a post")func deletePost(){
+        let context = self.modelContext
+        var postsInContext: [miniProject_seniorDesign.Post] = []
+        
+        let user = User(name: "Test User", email: "testuser@example.com", admin: true, password: "oof", salt: salt)
+        context.insert(user)
+            
+        let post = Post(user: user, contents: "Test post content")
+        context.insert(post)
+        postsInContext.append(post)
+        
+        #expect(postsInContext.contains { $0 === post } == true)
+        
+        do {
+            try DataUtils.deletePost(for: context, post: post)
+            postsInContext.removeAll { $0 === post }
+            let isPostDeleted = !postsInContext.contains { $0 === post }
+            #expect(isPostDeleted == true)
+        } catch {
+            #expect(Bool(false), "Error deleting post: \(error)")
+        }
+    }
     
     
 //    @Test("user login with an empty email") func userInvalidLogin() {
