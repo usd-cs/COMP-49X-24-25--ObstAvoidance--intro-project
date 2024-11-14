@@ -129,32 +129,6 @@ func addPost(for commenting_user: User, post_content: String, logged_users: [Use
         
         
     }
-    func printAllUsers(context: ModelContext) {
-            let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
-        //print(fetchRequest)
-            do {
-                let users: [User] = try context.fetch(fetchRequest) // Fetch all users
-                print("Users in Database:")
-                for user in users {
-                    print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin)")
-                }
-            } catch {
-                print("Failed to fetch users: \(error.localizedDescription)")
-            }
-        }
-
-        func printAllPosts(context: ModelContext) {
-            let fetchRequest = FetchDescriptor<Post>() // Create a fetch descriptor for Post
-            do {
-                let posts: [Post] = try context.fetch(fetchRequest) // Fetch all posts
-                print("Posts in Database:")
-                for post in posts {
-                    print("Contents: \(post.contents), Created At: \(post.createdAt), Posted By: \(post.user.name)")
-                }
-            } catch {
-                print("Failed to fetch posts: \(error.localizedDescription)")
-            }
-        }
 
         func printAllComments(context: ModelContext) {
             let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
