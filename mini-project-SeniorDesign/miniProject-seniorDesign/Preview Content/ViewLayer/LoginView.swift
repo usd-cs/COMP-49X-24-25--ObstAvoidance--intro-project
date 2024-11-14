@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct LoginView: View {
-   // @Binding var loginState: LoginState
+    // @Binding var loginState: LoginState
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var isSecure: Bool = false
@@ -70,10 +70,21 @@ struct LoginView: View {
     func login(){
         //Actions for the button added here
         print("Username: \(username), Password: \(password)" )
+//        do {
+//            // Attempt to log in the user using DataUtils
+//            let success = try DataUtils.userLogin(for: user, context: context) // Pass the user and context
+//            if success == true {
+//                isLoggedIn = true
+//                currentUser = user
+//                print("User logged in: \(user.name)")
+//            }
+//        } catch {
+//            print("Login failed: \(error.localizedDescription)")
+//        }
     }
+}
     
 
-}
 #Preview {
     ContentView()
 }

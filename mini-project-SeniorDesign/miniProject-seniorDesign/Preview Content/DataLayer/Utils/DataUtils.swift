@@ -15,12 +15,10 @@ enum DataError: Error {
     case couldNotLoginUser
 }
 
-
-struct DataUtils {
     /**
     im really not sure on whether or not @Envirorment and @Query should go here or if i'd be better off passing them as parameters to the functions
      */
-    //@Environment(\.modelContext) static var context
+   // @Environment(\.modelContext) static var context: ModelContext
     //@Query() static var logged_users: [User]
     
     
@@ -29,7 +27,7 @@ struct DataUtils {
     /// - Parameter logged_users: the array containing all of the users currently in the database
     ///
     ///- Returns: true if the user is found in the array --> (in DB), false otherwhise
-    static func checkIfLoggedIn(for user :User, in logged_users: [User])->Bool{
+    func checkIfLoggedIn(for user :User, in logged_users: [User])->Bool{
         //im still not to sure on how to do this, but
         /**
          if user is logged in --> return true
@@ -58,13 +56,14 @@ struct DataUtils {
     /// - Throws: the function will throw an error if post_content is empty or if the Post failed to be saved to DB from context
     ///
     /// - Returns: Post the post added to the database if operation was succesfull or nil otherwise
-    static func addPost(for commenting_user: User, post_content: String, context: ModelContext, logged_users: [User]) throws -> Post?{
+func addPost(for commenting_user: User, post_content: String, logged_users: [User], context: ModelContext) throws -> Post?{
         
         //we probably don't want to add any empty posts
         guard !post_content.isEmpty else { throw DataError.invalidContent }
+        print(commenting_user.name, logged_users)
         
         
-        if(checkIfLoggedIn(for: commenting_user, in: logged_users)){
+//        if(checkIfLoggedIn(for: commenting_user, in: logged_users)){
            
             let new_post = Post(user: commenting_user , contents: post_content)
             
@@ -79,20 +78,26 @@ struct DataUtils {
             
             do{
                 try context.save()
+                print("Printing inside of data utils: ")
+                printAllUsers(context: context)
+                printAllPosts(context: context)
+                printAllComments(context: context)
                 return new_post //if post is succesfully created we return the post to indicate this
             }
             catch{
                 print("error post could not be saved to database")
                 throw DataError.couldNotSave
             }
+        
+
             
             
             
-        }
-        else{
-            // if user not found we return null so we prompt to login later in the program
-            return nil
-        }
+//        }
+//        else{
+//            // if user not found we return null so we prompt to login later in the program
+//            return nil
+//        }
         
         
     }
@@ -105,7 +110,7 @@ struct DataUtils {
     ///- Throws function throws an error if saving new user in database fails or if the user in question has no emial (unique identifier)
     ///
     ///- Returns void
-    static func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
+    func userLogin(for user_to_login: User, context: ModelContext) throws -> Bool?{
         
         //fist we check if the user object being passed has an email
         guard !user_to_login.email.isEmpty else{throw DataError.invalidContent}
@@ -124,31 +129,16 @@ struct DataUtils {
         
         
     }
-    
-    static func addComment(for context: ModelContext, post: Post, user: User, contents: String)throws -> Comment{
-        guard !contents.isEmpty else { throw DataError.invalidContent }
-        let comment = Comment(user: user, post:post, contents: contents, createdAt: Date())
-        context.insert(comment)
-        do{
-            try context.save()
-            return comment
-        } catch{
-            print("Error: Comment could not be saved to the database")
-            throw DataError.couldNotSave
-        }
-        
-    }
-    
-    static func deleteComment(for context: ModelContext, comment: Comment)throws {
-        context.delete(comment)
-        
-        do{
-            try context.save()
-        }
-        catch{
-            print("Error: Comment could not be delted from database")
-            throw DataError.couldNotSave
-        }
-    }
-}
 
+        func printAllComments(context: ModelContext) {
+            let fetchRequest = FetchDescriptor<Comment>() // Create a fetch descriptor for Comment
+            do {
+                let comments: [Comment] = try context.fetch(fetchRequest) // Fetch all comments
+                print("Comments in Database:")
+                for comment in comments {
+                    print("Contents: \(comment.contents), Created At: \(comment.createdAt), Commented By: \(comment.user.name), On Post: \(comment.post.contents)")
+                }
+            } catch {
+                print("Failed to fetch comments: \(error.localizedDescription)")
+            }
+        }
