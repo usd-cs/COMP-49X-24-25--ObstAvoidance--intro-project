@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 @testable import miniProject_seniorDesign
 
+
 @MainActor
 struct DataSchemaTests {
     var user: User
@@ -17,14 +18,18 @@ struct DataSchemaTests {
     var comment: miniProject_seniorDesign.Comment
     var container: ModelContainer
     var modelContext: ModelContext
+    var salt: String
+    var password: String
 
     init() throws {
         // Initialize the container with the schema
         container = try ModelContainer(for: User.self, Post.self, Comment.self)
         modelContext = container.mainContext
+        salt = createSalt()
+        password = hashSaltPassword(password: "Cracked123", salt: salt)
 
         // Initialize sample instances
-        user = User(name: "Darien Aranda", email: "daranda@sandiego.edu", admin: true)
+        user = User(name: "Darien Aranda", email: "daranda@sandiego.edu", admin: true, password: password, salt: salt)
         post = Post(user: user, contents: "This is a sample post content.")
         comment = Comment(user: user, post: post, contents: "This is a sample comment content.")
         
@@ -39,6 +44,8 @@ struct DataSchemaTests {
         #expect(user.name == "Darien Aranda")
         #expect(user.email == "daranda@sandiego.edu")
         #expect(user.admin == true)
+        #expect(user.password == password)
+        #expect(user.salt == salt)
     }
     
     // Test to verify Post initialization

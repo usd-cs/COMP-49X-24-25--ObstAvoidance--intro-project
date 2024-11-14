@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+
 //
 struct NewPostView: View {
     @State private var postContent: String = ""
@@ -17,7 +18,7 @@ struct NewPostView: View {
     var loggedUsers: [User]
     var currentUser: User
     var context: ModelContext
-    //@Binding var refreshTrigger: Bool
+    @Binding var refreshTrigger: Bool
     var body: some View {
         VStack
         {
@@ -41,13 +42,13 @@ struct NewPostView: View {
     func submitPost(){
         //Actions for the button added here
         do {
-            if let newPost = try addPost(for: currentUser, post_content: postContent, logged_users: loggedUsers, context: context) {
+            if let newPost = try DataUtils.addPost(for: currentUser, post_content: postContent, logged_users: loggedUsers, context: context) {
                 // If post is successfully created, show success message and clear content
                 errorMessage = nil
                 print("New post created: \(newPost.contents)")
                 postContent = "" // Clear the post content
                 try context.save()
-     //           refreshTrigger.toggle()
+                refreshTrigger.toggle()
  //               dismiss()
             } else {
                 errorMessage = "Failed to create post. User might not be logged in."
