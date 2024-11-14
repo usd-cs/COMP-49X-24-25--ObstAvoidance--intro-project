@@ -108,14 +108,15 @@ struct ContentView: View {
                 )
             }
             .onAppear {
+              //  setupTestUser()
                 DataUtils.printAllUsers(context: context)
                 isAdminStatus()
                 print("User Set up")
             }
         }
     }
-/*    private func setupTestUser() {
-        // Helper function to create a user with salted and hashed password
+    private func setupTestUser() {
+//         Helper function to create a user with salted and hashed password
         func createUser(name: String, email: String, plainPassword: String, admin: Bool) -> User {
             let salt = createSalt()
             let encryptedPassword = hashSaltPassword(password: plainPassword, salt: salt)
@@ -124,7 +125,7 @@ struct ContentView: View {
             return user
         }
         
-        // Helper function to create a post for a user
+//         Helper function to create a post for a user
         func createPost(for user: User, contents: String, daysAgo: Int) -> Post {
             let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date())!
             let post = Post(user: user, contents: contents, createdAt: date)
@@ -132,7 +133,7 @@ struct ContentView: View {
             return post
         }
         
-        // Helper function to create a comment for a post
+//         Helper function to create a comment for a post
         func createComment(for post: Post, by user: User, contents: String, daysAgo: Int) -> Comment {
             let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date())!
             let comment = Comment(user: user, post: post, contents: contents, createdAt: date)
@@ -140,12 +141,12 @@ struct ContentView: View {
             return comment
         }
         
-        // Create users with different passwords
+//         Create users with different passwords
         let user1 = createUser(name: "Alice", email: "alice@example.com", plainPassword: "alicePass123", admin: false)
         let user2 = createUser(name: "Bob", email: "bob@example.com", plainPassword: "bobSecret456", admin: false)
         let user3 = createUser(name: "Charlie", email: "charlie@example.com", plainPassword: "charlie789", admin: true)
         
-        // Create posts for each user
+//         Create posts for each user
         let post1User1 = createPost(for: user1, contents: "Alice's first post about Swift.", daysAgo: 1)
         let post2User1 = createPost(for: user1, contents: "Alice's thoughts on SwiftUI.", daysAgo: 3)
         
@@ -154,7 +155,7 @@ struct ContentView: View {
         
         let post1User3 = createPost(for: user3, contents: "Charlie's admin perspective on iOS development.", daysAgo: 1)
         
-        // Create comments for posts
+//         Create comments for posts
         _ = createComment(for: post1User1, by: user2, contents: "Great insights, Alice!", daysAgo: 1)
         _ = createComment(for: post2User1, by: user3, contents: "Thanks for sharing, Alice.", daysAgo: 2)
         
@@ -164,22 +165,22 @@ struct ContentView: View {
         _ = createComment(for: post1User3, by: user1, contents: "Thanks, Charlie! Very helpful.", daysAgo: 1)
         _ = createComment(for: post1User3, by: user2, contents: "I appreciate the tips, Charlie.", daysAgo: 1)
         
-        // Save the context
+//         Save the context
         do {
             try context.save()
             print("Test users, posts, and comments saved successfully.")
             
-            // Optional: Print all users, posts, and comments for verification
+//             Optional: Print all users, posts, and comments for verification
             DataUtils.printAllUsers(context: context)
             DataUtils.printAllPosts(context: context)
             DataUtils.printAllComments(context: context)
             
-            // Optionally, set the current user for testing
+//             Optionally, set the current user for testing
             currentUser = user1
         } catch {
             print("Failed to save test users, posts, or comments: \(error)")
         }
-    }*/
+    }
     
     private func isAdminStatus(){
         isAdmin = currentUser?.admin ?? false

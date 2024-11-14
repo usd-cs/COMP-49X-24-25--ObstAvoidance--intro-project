@@ -51,7 +51,7 @@ struct commentView: View{
             }
             .navigationTitle("Comments")
             
-            if isLoggedIn && isAdmin {
+            if isLoggedIn{
                 NavigationLink(destination: newCommentView(selectedPost: selectedPost, currentUser: currentUser, comments: $comments)) {
                     Text("Add a comment")
                         .font(.caption)

@@ -174,36 +174,35 @@ struct DataUtils
 //            print("Failed to fetch users: \(error.localizedDescription)")
 //        }
 //    }
-    static func printAllUsers(context: ModelContext)
-    {
+    static func printAllUsers(context: ModelContext) {
         let fetchRequest = FetchDescriptor<User>() // Create a fetch descriptor for User
         
         do {
             let users: [User] = try context.fetch(fetchRequest) // Fetch all users
             
-            // Filter independent users (non-admins)
             // Prepare output to write to file
             var seenNames = Set<String>()
-
             var output = "Independent Users in Database:\n"
             
             for user in users {
-                //HARD CODED TO MAKE SURE THAT WE OLY HAVE EACH USER ONCE USERS
-                if !seenNames.contains(user.name){
+                if !seenNames.contains(user.name) {
                     seenNames.insert(user.name)
                     print("Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt: \(user.salt)\n")
                     output += "Name: \(user.name), Email: \(user.email), Admin: \(user.admin), Password: \(user.password), Salt: \(user.salt)\n"
                 }
             }
             
-            // Get the file path for saving the output
+            // Define the file path in the Documents directory
             let fileManager = FileManager.default
-            let path = fileManager.temporaryDirectory.appendingPathComponent("independent_users.txt")
-            
-            // Write output to the file
-            try output.write(to: path, atomically: true, encoding: .utf8)
-            
-            print("Independent users have been written to: \(path.path)")
+            if let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let path = documentsURL.appendingPathComponent("independent_users.txt")
+                
+                // Write output to the file
+                try output.write(to: path, atomically: true, encoding: .utf8)
+                print("Independent users have been written to: \(path.path)")
+            } else {
+                print("Failed to locate the Documents directory.")
+            }
             
         } catch {
             print("Failed to fetch users or write to file: \(error.localizedDescription)")
