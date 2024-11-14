@@ -14,22 +14,20 @@ struct commentView: View{
     @State var comments: [Comment]
     let isAdmin: Bool
     let isLoggedIn: Bool
-    let selectedPost: Post
-    let currentUser: User
-    
-    
-    @Environment(\.modelContext) var context
     
     var body : some View{
         VStack{
             List(comments, id: \.createdAt) { comment in
+                
+                
+                
                 VStack(alignment: .leading) {
                     HStack{
                         VStack{
                             Text(comment.contents)
                                 .font(.body)
                         }
-                        if isAdmin && isLoggedIn {
+                        if isAdmin {
                             Button(action: {
                                 commentToDelete = comment
                                 showDeleteConfirmation = true
@@ -49,8 +47,8 @@ struct commentView: View{
             }
             .navigationTitle("Comments")
             
-            if isLoggedIn && isAdmin {
-                NavigationLink(destination: newCommentView(selectedPost: selectedPost, currentUser: currentUser, comments: $comments)) {
+            if isLoggedIn || isAdmin {
+                NavigationLink(destination: newCommentView()) {
                     Text("Add a comment")
                         .font(.caption)
                         .foregroundColor(.blue)
@@ -71,12 +69,7 @@ struct commentView: View{
         }
     }
     func deleteComment(_ comment: Comment) {
-        do{
-            try DataUtils.deleteComment(for: context, comment: comment)
-            comments.removeAll { $0.createdAt == comment.createdAt }
-            print("Comment deleted: \(comment.contents)")
-        } catch{
-            print("Failed to delete comment: \(error)")
-        }
+        comments.removeAll { $0.createdAt == comment.createdAt }
+        print("Comment deleted: \(comment.contents)")
     }
 }
