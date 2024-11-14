@@ -208,9 +208,9 @@ struct ContentView: View {
             print("Test users, posts, and comments saved successfully.")
             
             // Optional: Print all users, posts, and comments for verification
-            printAllUsers(context: context)
-            printAllPosts(context: context)
-            printAllComments(context: context)
+            DataUtils.printAllUsers(context: context)
+            DataUtils.printAllPosts(context: context)
+            DataUtils.printAllComments(context: context)
             
             // Optionally, set the current user for testing
             currentUser = user1

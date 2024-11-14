@@ -78,7 +78,7 @@ struct LoginView: View {
         print("Username: \(username), Password: \(password)" )
         do {
             // Attempt to log in the user using DataUtils
-            let user = try userLogin(username: username, password: password, context: context) // Pass the user and context
+            let user = try DataUtils.userLogin(username: username, password: password, context: context) // Pass the user and context
             if user != nil {
                 isLoggedIn = true
                 print("Current user \(currentUser?.name)")
